@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Helper for basic string validation
+    function isValidString(val, maxLen) {
+      return val is string && val.size() <= maxLen;
+    }
+
+    // Shipment Validation
+    function isValidShipment(data) {
+      return data.keys().hasAll(['id', 'origin', 'destination', 'status', 'priority']) &&
+             data.keys().size() <= 12 &&
+             isValidString(data.id, 128) &&
+             isValidString(data.origin, 256) &&
+             isValidString(data.destination, 256) &&
+             data.status in ['pending', 'in-transit', 'delivered', 'delayed', 'cancelled'] &&
+             data.priority in ['low', 'medium', 'high', 'critical'];
+    }
+
+    match /shipments/{shipmentId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(shipmentId) && isValidShipment(request.resource.data);
+      allow update: if isSignedIn() && isValidShipment(request.resource.data) &&
+                     (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'currentLat', 'currentLng', 'lastUpdated', 'eta']));
+      allow delete: if false; // Logistics records are permanent for audit
+    }
+
+    // Inventory Validation
+    function isValidInventory(data) {
+      return data.keys().hasAll(['id', 'name', 'stockLevel', 'warehouse']) &&
+             data.keys().size() <= 10 &&
+             isValidString(data.id, 128) &&
+             isValidString(data.name, 256) &&
+             data.stockLevel is number &&
+             isValidString(data.warehouse, 256);
+    }
+
+    match /inventory/{inventoryId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(inventoryId) && isValidInventory(request.resource.data);
+      allow update: if isSignedIn() && isValidInventory(request.resource.data) &&
+                     (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stockLevel', 'unitPrice']));
+      allow delete: if false;
+    }
+
+    // Pricing Validation
+    function isValidPricing(data) {
+      return data.keys().hasAll(['id', 'productId', 'basePrice', 'currentPrice']) &&
+             data.keys().size() <= 12 &&
+             isValidString(data.id, 128) &&
+             isValidString(data.productId, 128) &&
+             data.basePrice is number &&
+             data.currentPrice is number;
+    }
+
+    match /pricing/{pricingId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(pricingId) && isValidPricing(request.resource.data);
+      allow update: if isSignedIn() && isValidPricing(request.resource.data) &&
+                     (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['currentPrice', 'demandFactor', 'supplyFactor', 'competitorPrice', 'lastAdjustmentReason', 'updatedAt']));
+      allow delete: if false;
+    }
+  }
+}

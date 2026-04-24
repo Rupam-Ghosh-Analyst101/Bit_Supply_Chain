@@ -1,0 +1,68 @@
+{
+  "entities": {
+    "Shipment": {
+      "title": "Shipment",
+      "description": "Represents a logistics shipment in transit or delivered.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "origin": { "type": "string" },
+        "destination": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "in-transit", "delivered", "delayed", "cancelled"] },
+        "eta": { "type": "string", "format": "date-time" },
+        "currentLat": { "type": "number" },
+        "currentLng": { "type": "number" },
+        "lastUpdated": { "type": "string", "format": "date-time" },
+        "priority": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "carrier": { "type": "string" }
+      },
+      "required": ["id", "origin", "destination", "status", "priority"]
+    },
+    "Inventory": {
+      "title": "Inventory Item",
+      "description": "Tracking stock levels across warehouses.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "stockLevel": { "type": "number" },
+        "warehouse": { "type": "string" },
+        "reorderPoint": { "type": "number" },
+        "category": { "type": "string" },
+        "unitPrice": { "type": "number" }
+      },
+      "required": ["id", "name", "stockLevel", "warehouse"]
+    },
+    "PricingModel": {
+      "title": "Dynamic Pricing Model",
+      "description": "Real-time pricing data for products based on supply chain factors.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "productId": { "type": "string" },
+        "basePrice": { "type": "number" },
+        "currentPrice": { "type": "number" },
+        "demandFactor": { "type": "number" },
+        "supplyFactor": { "type": "number" },
+        "competitorPrice": { "type": "number" },
+        "lastAdjustmentReason": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "productId", "basePrice", "currentPrice"]
+    }
+  },
+  "firestore": {
+    "/shipments/{shipmentId}": {
+      "schema": "Shipment",
+      "description": "Active and historical shipments."
+    },
+    "/inventory/{inventoryId}": {
+      "schema": "Inventory",
+      "description": "Current inventory status."
+    },
+    "/pricing/{pricingId}": {
+      "schema": "PricingModel",
+      "description": "Dynamic pricing records."
+    }
+  }
+}
