@@ -1,5 +1,5 @@
 import React from 'react';
-import { Truck, MapPin, Calendar, AlertTriangle, Info, Sparkles } from 'lucide-react';
+import { Truck, MapPin, Calendar, AlertTriangle, Info, Sparkles, Filter, Search, ChevronRight, MoreVertical } from 'lucide-react';
 import { Shipment } from '../types';
 import { formatDate, cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
@@ -9,146 +9,159 @@ interface ShipmentListProps {
 }
 
 export const ShipmentList: React.FC<ShipmentListProps> = ({ shipments }) => {
-  const getStatusColor = (status: Shipment['status']) => {
+  const getStatusStyle = (status: Shipment['status']) => {
     switch (status) {
-      case 'in-transit': return 'text-cyan-400 border-cyan-500/30 bg-cyan-500/5';
-      case 'delivered': return 'text-emerald-400 border-emerald-500/30 bg-emerald-500/5';
-      case 'delayed': return 'text-orange-400 border-orange-500/30 bg-orange-500/5';
-      case 'cancelled': return 'text-rose-400 border-rose-500/30 bg-rose-500/5';
-      case 'pending': return 'text-slate-500 border-white/10 bg-white/5';
-      default: return 'text-slate-500 border-white/10 bg-white/5';
+      case 'in-transit': return 'bg-blue-50 text-blue-600 border-blue-100';
+      case 'delivered': return 'bg-emerald-50 text-emerald-600 border-emerald-100';
+      case 'delayed': return 'bg-orange-50 text-orange-500 border-orange-100';
+      case 'cancelled': return 'bg-red-50 text-red-600 border-red-100';
+      case 'pending': return 'bg-slate-50 text-slate-500 border-slate-100';
+      default: return 'bg-slate-50 text-slate-500 border-slate-100';
     }
   };
 
-  const getPriorityColor = (priority: Shipment['priority']) => {
+  const getPriorityStyle = (priority: Shipment['priority']) => {
     switch (priority) {
-      case 'critical': return 'text-rose-500 glow-text';
-      case 'high': return 'text-orange-500';
-      default: return 'text-slate-500';
+      case 'critical': return 'text-red-600 font-black';
+      case 'high': return 'text-orange-600 font-bold';
+      default: return 'text-slate-400 font-medium';
     }
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-6 animate-in fade-in duration-500">
+      <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
         <div>
-          <h2 className="text-sm font-bold text-slate-500 uppercase tracking-[0.3em] mb-2 px-1">Logistics Pipeline</h2>
-          <h3 className="text-3xl font-black text-white leading-none glow-text uppercase">Active Network</h3>
+          <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Global Logistics</h2>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Active Shipment Network</h1>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="flex h-10 w-64 glass px-3 py-2 text-xs focus-within:border-cyan-500/50 transition-all">
+        <div className="flex items-center gap-3">
+          <div className="relative w-72">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
             <input 
               type="text" 
-              placeholder="Query Node or Container ID..." 
-              className="flex-1 bg-transparent border-none outline-none placeholder:text-slate-600 font-mono text-cyan-400 tracking-tighter"
+              placeholder="Search ID, carrier, or destination..." 
+              className="w-full bg-white border border-slate-200 rounded-lg pl-10 pr-4 py-2 text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
             />
           </div>
+          <button className="px-4 py-2 bg-white border border-slate-200 rounded-lg flex items-center gap-2 text-sm font-bold text-slate-600 hover:bg-slate-50">
+             <Filter size={16} /> Filters
+          </button>
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-all flex items-center gap-2">
+             <Truck size={16} /> Create Shipment
+          </button>
         </div>
       </header>
 
-      <div className="glass overflow-hidden shadow-2xl">
+      <div className="glass overflow-hidden border border-border shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-white/10 bg-white/5">
-                <th className="p-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-8">Deployment ID</th>
-                <th className="p-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Vector (Origin &gt; Dest)</th>
-                <th className="p-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest text-center">Protocol Status</th>
-                <th className="p-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Schedule</th>
-                <th className="p-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest font-mono text-cyan-400">
+              <tr className="border-b border-border bg-slate-50/50">
+                <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">ID & Carrier</th>
+                <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Route (Source → Target)</th>
+                <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Status</th>
+                <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Schedule</th>
+                <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">
                   <div className="flex items-center gap-1">
-                    <Sparkles size={12} /> Predictive ETA
+                    <Sparkles size={12} className="text-blue-600" /> AI Prediction
                   </div>
                 </th>
-                <th className="p-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Priority</th>
-                <th className="p-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-4">Telemetry</th>
+                <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Priority</th>
+                <th className="px-6 py-4"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-border">
               {shipments.map((shipment) => (
-                <tr key={shipment.id} className="hover:bg-white/5 transition-colors group border-white/5">
-                  <td className="p-4 pl-8">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 border border-white/10 rounded-sm text-slate-500 group-hover:border-cyan-500/50 group-hover:text-cyan-400 transition-all">
-                        <Truck size={14} />
+                <tr key={shipment.id} className="hover:bg-slate-50/80 transition-colors group">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100 group-hover:scale-110 transition-transform">
+                        <Truck size={18} />
                       </div>
                       <div>
-                        <p className="data-mono text-white tracking-tighter group-hover:glow-text uppercase">{shipment.id}</p>
-                        <p className="text-[9px] font-bold text-slate-600 uppercase tracking-tighter">{shipment.carrier}</p>
+                        <p className="text-sm font-black text-slate-900 font-mono tracking-tighter uppercase leading-none mb-1.5">{shipment.id}</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{shipment.carrier}</p>
                       </div>
                     </div>
                   </td>
-                  <td className="p-4">
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-2 text-[11px] text-slate-500 font-bold uppercase tracking-tighter">
-                        <MapPin size={10} className="shrink-0" /> {shipment.origin}
-                      </div>
-                      <div className="w-full h-[1px] bg-white/5 my-0.5 relative">
-                         <div className="absolute top-0 left-0 w-1/2 h-full bg-cyan-500/40 shadow-[0_0_5px_rgba(0,240,255,0.5)]" />
-                      </div>
-                      <div className="flex items-center gap-2 text-[11px] font-bold text-white uppercase tracking-tighter">
-                        <MapPin size={10} className="shrink-0 text-cyan-400" /> {shipment.destination}
-                      </div>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                       <div className="flex flex-col text-right">
+                          <span className="text-xs font-bold text-slate-500">{shipment.origin.split(',')[0]}</span>
+                       </div>
+                       <div className="flex-1 min-w-[60px] h-px bg-slate-200 relative">
+                          <div className={cn(
+                            "absolute top-0 left-0 h-full transition-all duration-1000",
+                            shipment.status === 'delayed' ? 'bg-orange-400 w-2/3' : 'bg-blue-400 w-full'
+                          )} />
+                       </div>
+                       <ChevronRight className="text-slate-300" size={12} />
+                       <div className="flex flex-col">
+                          <span className="text-xs font-black text-slate-900">{shipment.destination.split(',')[0]}</span>
+                       </div>
                     </div>
                   </td>
-                  <td className="p-4 text-center">
+                  <td className="px-6 py-4 text-center">
                     <span className={cn(
-                      "px-2 py-0.5 rounded-sm text-[9px] font-black uppercase tracking-widest border",
-                      getStatusColor(shipment.status)
+                      "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-transparent",
+                      getStatusStyle(shipment.status)
                     )}>
                       {shipment.status.replace('-', ' ')}
                     </span>
                   </td>
-                  <td className="p-4">
-                    <div className="flex items-center gap-2 text-[11px] text-slate-500 font-mono">
-                      <Calendar size={12} className="opacity-50" />
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2 text-xs font-bold text-slate-600 font-mono">
+                      <Calendar size={14} className="text-slate-400" />
                       {formatDate(shipment.eta)}
                     </div>
                   </td>
-                  <td className="p-4">
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-2 text-[11px] font-bold text-cyan-400 font-mono">
-                        {shipment.predictedEta ? (
-                          <motion.div 
-                            initial={{ opacity: 0, x: -5 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="flex items-center gap-1.5"
-                          >
-                            <Sparkles size={12} className="animate-pulse" />
-                            {formatDate(shipment.predictedEta)}
-                          </motion.div>
-                        ) : (
-                          <span className="text-slate-600 font-normal italic opacity-50">PROCESING...</span>
-                        )}
-                      </div>
-                      {shipment.predictedEta && (
-                        <div className="flex items-center gap-1 w-24">
-                          <div className="h-0.5 flex-1 bg-white/5 rounded-full overflow-hidden">
-                            <motion.div 
-                              initial={{ width: 0 }}
-                              animate={{ width: '85%' }}
-                              className="h-full bg-cyan-400 shadow-[0_0_5px_rgba(0,240,255,0.8)]"
-                            />
-                          </div>
-                          <span className="text-[8px] text-cyan-600 font-mono">0.85c</span>
+                  <td className="px-6 py-4">
+                    <div className="flex flex-col gap-1.5">
+                      {shipment.predictedEta ? (
+                        <div className="flex items-center gap-2 text-xs font-black text-blue-600 font-mono">
+                           <Sparkles size={12} className="animate-pulse" />
+                           {formatDate(shipment.predictedEta)}
                         </div>
+                      ) : (
+                        <span className="text-[10px] text-slate-400 font-bold italic">RECALCULATING...</span>
                       )}
+                      <div className="h-1 bg-slate-100 rounded-full overflow-hidden w-24">
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          animate={{ width: '85%' }}
+                          className="h-full bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.3)] transition-all duration-1000"
+                        />
+                      </div>
                     </div>
                   </td>
-                  <td className="p-4">
-                    <div className={cn("text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 border border-transparent rounded", getPriorityColor(shipment.priority))}>
+                  <td className="px-6 py-4">
+                    <span className={cn("text-[10px] uppercase tracking-widest", getPriorityStyle(shipment.priority))}>
                       {shipment.priority}
-                    </div>
+                    </span>
                   </td>
-                  <td className="p-4">
-                    <button className="p-2 text-slate-700 hover:text-cyan-400 transition-colors">
-                      <Info size={16} />
+                  <td className="px-6 py-4 text-right">
+                    <button className="p-2 text-slate-400 hover:text-slate-900 transition-colors">
+                      <MoreVertical size={18} />
                     </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+        <div className="px-6 py-4 bg-slate-50/50 border-t border-border flex justify-between items-center text-xs">
+           <p className="font-bold text-slate-500">Total Deployments: {shipments.length}</p>
+           <div className="flex gap-1.5">
+              {[1, 2, 3, '...', 12].map((p, i) => (
+                <div key={i} className={cn(
+                  "w-8 h-8 rounded border flex items-center justify-center font-bold transition-all cursor-pointer",
+                  p === 1 ? "bg-blue-600 text-white border-blue-700 shadow-md" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                )}>
+                  {p}
+                </div>
+              ))}
+           </div>
         </div>
       </div>
     </div>

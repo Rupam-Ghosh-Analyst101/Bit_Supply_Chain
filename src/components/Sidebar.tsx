@@ -1,83 +1,122 @@
 import React from 'react';
-import { LayoutDashboard, Truck, Package, DollarSign, BrainCircuit, LogOut, Menu, X } from 'lucide-react';
+import { 
+  LayoutDashboard, Truck, Package, DollarSign, BrainCircuit, 
+  LogOut, Menu, X, Factory, Cpu, Map, Users, 
+  ShieldCheck, FileText, Settings, Plus, Upload, Bell, ChevronDown
+} from 'lucide-react';
 import { ViewType } from '../types';
 import { cn } from '../lib/utils';
+import { motion } from 'motion/react';
 
 interface SidebarProps {
   currentView: ViewType;
-  setView: (view: ViewType) => void;
+  onViewChange: (view: ViewType) => void;
+  collapsed: boolean;
+  onToggle: () => void;
+  user: any;
   onLogout: () => void;
-  userEmail: string;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, onLogout, userEmail }) => {
-  const [isOpen, setIsOpen] = React.useState(true);
-
+export const Sidebar: React.FC<SidebarProps> = ({ 
+  currentView, 
+  onViewChange, 
+  collapsed, 
+  onToggle,
+  user,
+  onLogout
+}) => {
   const navItems = [
-    { id: 'dashboard', label: 'Overview', icon: LayoutDashboard },
-    { id: 'shipments', label: 'Logistics', icon: Truck },
-    { id: 'inventory', label: 'Inventory', icon: Package },
-    { id: 'pricing', label: 'Dynamic Pricing', icon: DollarSign },
-    { id: 'insights', label: 'AI Strategy', icon: BrainCircuit },
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'sourcing', label: 'Supply', icon: Factory },
+    { id: 'procurement', label: 'Procurement', icon: Database },
+    { id: 'manufacturing', label: 'Manufacturing', icon: Cpu },
+    { id: 'inventory', label: 'Inventory / Warehouse', icon: Package },
+    { id: 'shipments', label: 'Logistics / Transport', icon: Truck },
+    { id: 'distribution', label: 'Last Mile Delivery', icon: Map },
+    { id: 'pricing', label: 'Analytics / Insights', icon: DollarSign },
+    { id: 'risk', label: 'Risk & Compliance', icon: ShieldCheck },
+    { id: 'sustainability', label: 'Sustainability', icon: Globe },
+    { id: 'reports', label: 'Reports', icon: FileText },
+    { id: 'insights', label: 'Settings', icon: Settings },
   ];
 
   return (
-    <>
-      <button 
-        className="fixed top-4 left-4 z-50 p-2 bg-white border border-gray-200 rounded-md xl:hidden"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        {isOpen ? <X size={20} /> : <Menu size={20} />}
-      </button>
-
-      <div className={cn(
-        "fixed inset-y-0 left-0 z-40 w-64 bg-slate-950/80 backdrop-blur-xl transform transition-transform duration-300 ease-in-out border-r border-white/5 shadow-2xl",
-        !isOpen && "-translate-x-full"
-      )}>
-        <div className="flex flex-col h-full p-6">
-          <div className="flex items-center gap-3 mb-10 overflow-hidden">
-            <div className="w-8 h-8 bg-cyan-500 rounded-sm rotate-45 flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.5)]">
-              <div className="w-4 h-4 bg-black rotate-45"></div>
-            </div>
-            <h1 className="text-lg font-bold text-white tracking-widest uppercase glow-text">NexChain <span className="text-cyan-400">AI</span></h1>
+    <aside 
+      className={cn(
+        "fixed left-0 top-0 h-full bg-sidebar-bg text-slate-400 transition-all duration-300 z-50 flex flex-col border-r border-slate-800 shadow-2xl",
+        collapsed ? "w-16" : "w-64"
+      )}
+    >
+      {/* Brand Header */}
+      <div className="flex items-center gap-3 px-6 py-8 border-b border-white/5">
+        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shrink-0 shadow-lg shadow-blue-500/20">
+          <Globe className="text-white" size={18} />
+        </div>
+        {!collapsed && (
+          <div className="flex flex-col">
+            <span className="text-white font-black text-sm uppercase tracking-tighter leading-none">SC Control Tower</span>
+            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Supply Chain Manager</span>
           </div>
+        )}
+      </div>
 
-          <nav className="flex-1 space-y-1">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setView(item.id as ViewType)}
-                className={cn(
-                  "w-full flex items-center gap-3 px-4 py-3 rounded-sm transition-all duration-300 group text-[11px] font-bold uppercase tracking-widest",
-                  currentView === item.id 
-                    ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-[inset_0_0_10px_rgba(6,182,212,0.2)]" 
-                    : "text-slate-500 hover:text-white hover:bg-white/5"
-                )}
-              >
-                <item.icon size={16} className={cn(
-                  "transition-all duration-300",
-                  currentView === item.id ? "text-cyan-400 drop-shadow-[0_0_5px_rgba(6,182,212,0.8)]" : "text-slate-600 group-hover:text-slate-300"
-                )} />
-                {item.label}
+      {/* Main Navigation */}
+      <nav className="flex-1 overflow-y-auto py-6 scrollbar-hide px-3 space-y-1">
+        {navItems.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => onViewChange(item.id as ViewType)}
+            className={cn(
+              "w-full flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all text-sm font-bold relative group",
+              currentView === item.id 
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20" 
+                : "hover:bg-white/5 hover:text-white"
+            )}
+          >
+            <item.icon size={18} className={cn("shrink-0", currentView === item.id ? "text-white" : "text-slate-400 group-hover:text-blue-400")} />
+            {!collapsed && <span className="uppercase tracking-tight text-[11px] font-black">{item.label}</span>}
+            {currentView === item.id && !collapsed && (
+               <div className="absolute right-2 w-1.5 h-1.5 bg-white rounded-full" />
+            )}
+          </button>
+        ))}
+      </nav>
+
+      {/* Quick Actions Footer */}
+      {!collapsed && (
+        <div className="p-4 border-t border-white/5 bg-white/[0.02]">
+           <div className="flex items-center justify-between px-2 mb-4">
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Quick Actions</span>
+              <ChevronDown size={12} className="text-slate-600" />
+           </div>
+           <div className="space-y-2">
+              <button className="w-full flex items-center gap-3 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all text-[10px] font-bold text-white border border-white/5">
+                 <Plus size={14} className="text-blue-400" /> CREATE ORDER
               </button>
-            ))}
-          </nav>
+              <button className="w-full flex items-center gap-3 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all text-[10px] font-bold text-white border border-white/5">
+                 <Truck size={14} className="text-emerald-400" /> ADD SHIPMENT
+              </button>
+              <button className="w-full flex items-center gap-3 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all text-[10px] font-bold text-white border border-white/5">
+                 <Bell size={14} className="text-amber-400" /> NEW ALERT
+              </button>
+              <button className="w-full flex items-center gap-3 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all text-[10px] font-bold text-white border border-white/5">
+                 <Upload size={14} className="text-slate-400" /> UPLOAD DOCUMENT
+              </button>
+           </div>
+        </div>
+      )}
 
-          <div className="pt-6 border-t border-white/5 mt-auto">
-            <div className="px-4 py-3 mb-4 rounded bg-white/5 border border-white/10">
-              <p className="text-[9px] text-slate-500 mb-1 uppercase tracking-tighter">Secure Terminal</p>
-              <p className="text-xs font-mono text-emerald-400 truncate tracking-tighter">{userEmail}</p>
-            </div>
-            <button
-              onClick={onLogout}
-              className="w-full flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-rose-400 hover:bg-rose-500/5 rounded transition-all text-[11px] font-bold uppercase tracking-widest"
-            >
-              <LogOut size={16} />
-              DISCONNECT
-            </button>
-          </div>
+      {/* Status Footer */}
+      <div className="p-4 border-t border-white/5">
+        <div className="flex items-center gap-3 px-2">
+          <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+          <span className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.2em] whitespace-nowrap">Systems Active</span>
         </div>
       </div>
-    </>
+    </aside>
   );
 };
+
+const Database = (props: any) => (
+   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg>
+);

@@ -5,33 +5,35 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   
-  --color-bg-dark: #05070A;
-  --color-panel-bg: rgba(13, 17, 23, 0.8);
-  --color-accent-cyan: #00F0FF;
-  --color-accent-emerald: #00FF94;
-  --color-accent-amber: #FFAD00;
-  --color-text-dim: #8B949E;
+  --color-bg-main: #F1F5F9;
+  --color-sidebar-bg: #0F172A;
+  --color-card-bg: #FFFFFF;
+  --color-primary: #2563EB;
+  --color-accent-blue: #3B82F6;
+  --color-text-main: #1E293B;
+  --color-text-muted: #64748B;
+  --color-border: #E2E8F0;
 }
 
 @layer base {
   body {
-    @apply font-sans bg-bg-dark text-[#E6EDF3] antialiased grid-pattern;
+    @apply font-sans bg-bg-main text-text-main antialiased;
   }
 }
 
 @utility glass {
-  @apply bg-panel-bg border border-white/10 backdrop-blur-md rounded-md shadow-[0_4px_30px_rgba(0,0,0,0.1)];
+  @apply bg-white border border-border rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.1),0_1px_2px_0_rgba(0,0,0,0.06)];
 }
 
 @utility glow-text {
-  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
-}
-
-@utility grid-pattern {
-  background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size: 32px 32px;
+  @apply text-primary font-bold;
 }
 
 @utility data-mono {
-  @apply font-mono text-[11px] tracking-wider uppercase;
+  @apply font-mono text-[11px] font-medium tracking-tight;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
 }

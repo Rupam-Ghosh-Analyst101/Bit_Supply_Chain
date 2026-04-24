@@ -10,13 +10,19 @@ import { Dashboard } from './components/Dashboard';
 import { ShipmentList } from './components/ShipmentList';
 import { InventoryGrid } from './components/InventoryGrid';
 import { PricingMatrix } from './components/PricingMatrix';
+import { SourcingManager } from './components/SourcingManager';
+import { ManufacturingPulse } from './components/ManufacturingPulse';
+import { DistributionFlow } from './components/DistributionFlow';
+import { CustomerCenter } from './components/CustomerCenter';
 import { AIInsights } from './components/AIInsights';
 import { Login } from './components/Login';
 import { collection, onSnapshot, query, setDoc, doc, getDocs, limit } from 'firebase/firestore';
 import { db } from './lib/firebase';
-import { Shipment, InventoryItem, PricingRecord, ViewType } from './types';
+import { Shipment, InventoryItem, PricingRecord, ViewType, SourcingRecord, ManufacturingJob } from './types';
 import { motion } from 'motion/react';
 import { Activity } from 'lucide-react';
+
+import { DynamicTouchOverlay } from './components/DynamicTouchOverlay';
 
 function AppContent() {
   const { user, loading: authLoading, signIn, logout } = useAuth();
@@ -24,7 +30,10 @@ function AppContent() {
   const [shipments, setShipments] = useState<Shipment[]>([]);
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [pricing, setPricing] = useState<PricingRecord[]>([]);
+  const [sourcing, setSourcing] = useState<SourcingRecord[]>([]);
+  const [manufacturing, setManufacturing] = useState<ManufacturingJob[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Seed Data for demonstration if collections are empty
   useEffect(() => {
@@ -33,9 +42,7 @@ function AppContent() {
     const seedData = async () => {
       const shipSnap = await getDocs(query(collection(db, 'shipments'), limit(1)));
       if (shipSnap.empty) {
-        console.log("Seeding initial supply chain data...");
-        
-        // Seed Shipments
+        // ... (seeding logic remains the same)
         const initialShipments: Partial<Shipment>[] = [
           { id: 'SH-7721', origin: 'Shanghai, CN', destination: 'Rotterdam, NL', status: 'in-transit', eta: '2026-05-12T14:00:00Z', predictedEta: '2026-05-10T11:00:00Z', carrier: 'Maersk Line', priority: 'high' },
           { id: 'SH-8822', origin: 'Singapore, SG', destination: 'Los Angeles, US', status: 'delayed', eta: '2026-05-08T09:30:00Z', predictedEta: '2026-05-11T16:45:00Z', carrier: 'COSCO', priority: 'critical' },
@@ -46,7 +53,6 @@ function AppContent() {
           await setDoc(doc(db, 'shipments', s.id!), { ...s, lastUpdated: new Date().toISOString() });
         }
 
-        // Seed Inventory
         const initialInventory: InventoryItem[] = [
           { id: 'INV-001', name: 'Nvidia H100 GPU', stockLevel: 450, warehouse: 'Santa Clara Huber', reorderPoint: 500, category: 'Semiconductors', unitPrice: 25000 },
           { id: 'INV-002', name: 'Lithium Cell XL-2', stockLevel: 2800, warehouse: 'Tesla Giga Berlin', reorderPoint: 1500, category: 'Energy Storage', unitPrice: 120 },
@@ -57,7 +63,6 @@ function AppContent() {
           await setDoc(doc(db, 'inventory', i.id), i);
         }
 
-        // Seed Pricing
         const initialPricing: PricingRecord[] = [
           { id: 'PR-NVD', productId: 'Nvidia H100', basePrice: 25000, currentPrice: 28450, demandFactor: 1.8, supplyFactor: 1.4, competitorPrice: 27900, lastAdjustmentReason: 'Supply shortage in advanced node fabrication.', updatedAt: new Date().toISOString() },
           { id: 'PR-LTH', productId: 'Lithium Cell', basePrice: 120, currentPrice: 115, demandFactor: 0.9, supplyFactor: 1.1, competitorPrice: 118, lastAdjustmentReason: 'Increased mining yield in South America.', updatedAt: new Date().toISOString() },
@@ -65,6 +70,25 @@ function AppContent() {
         ];
         for (const p of initialPricing) {
           await setDoc(doc(db, 'pricing', p.id), p);
+        }
+
+        const initialSourcing: SourcingRecord[] = [
+          { id: 'SRC-001', vendorName: 'Global Silicon Corp', material: 'Polysilicon', leadTime: 14, reliabilityRating: 98, riskLevel: 'low', lastAuditDate: '2026-03-01' },
+          { id: 'SRC-002', vendorName: 'Andes Minerals', material: 'Lithium Carbonate', leadTime: 45, reliabilityRating: 72, riskLevel: 'high', lastAuditDate: '2026-04-10' },
+          { id: 'SRC-003', vendorName: 'Euro-Assembly S.A.', material: 'Precision Machining', leadTime: 22, reliabilityRating: 92, riskLevel: 'medium', lastAuditDate: '2026-02-15' },
+        ];
+        for (const s of initialSourcing) {
+          await setDoc(doc(db, 'sourcing', s.id), s);
+        }
+
+        const initialManufacturing: ManufacturingJob[] = [
+          { id: 'JOB-9901', productName: 'H100 Core Alpha', quantity: 1200, status: 'production', efficiency: 94, startDate: '2026-04-20' },
+          { id: 'JOB-9902', productName: 'PowerNode Battery Pack', quantity: 500, status: 'quality-check', efficiency: 88, startDate: '2026-04-15' },
+          { id: 'JOB-9903', productName: 'Quantum Lattice v2', quantity: 2500, status: 'planning', efficiency: 100, startDate: '2026-05-01' },
+          { id: 'JOB-9904', productName: 'Edge Vision Module', quantity: 8000, status: 'completed', efficiency: 97, startDate: '2026-04-01' },
+        ];
+        for (const m of initialManufacturing) {
+          await setDoc(doc(db, 'manufacturing', m.id), m);
         }
       }
     };
@@ -84,6 +108,12 @@ function AppContent() {
     });
     const unsubPrice = onSnapshot(collection(db, 'pricing'), (snap) => {
       setPricing(snap.docs.map(d => d.data() as PricingRecord));
+    });
+    const unsubSource = onSnapshot(collection(db, 'sourcing'), (snap) => {
+      setSourcing(snap.docs.map(d => d.data() as SourcingRecord));
+    });
+    const unsubManuf = onSnapshot(collection(db, 'manufacturing'), (snap) => {
+      setManufacturing(snap.docs.map(d => d.data() as ManufacturingJob));
       setLoading(false);
     });
 
@@ -91,15 +121,17 @@ function AppContent() {
       unsubShip();
       unsubInv();
       unsubPrice();
+      unsubSource();
+      unsubManuf();
     };
   }, [user]);
 
   if (authLoading) return (
-    <div className="min-h-screen bg-bg-dark grid-pattern flex items-center justify-center">
+    <div className="min-h-screen bg-bg-main flex items-center justify-center">
       <div className="relative">
-        <div className="w-16 h-16 border-2 border-cyan-500/20 rounded-full" />
-        <div className="absolute inset-0 w-16 h-16 border-t-2 border-cyan-500 rounded-full animate-spin" />
-        <div className="mt-8 text-[10px] text-cyan-400 font-mono tracking-widest text-center animate-pulse">SYNCING...</div>
+        <div className="w-16 h-16 border-2 border-primary/20 rounded-full" />
+        <div className="absolute inset-0 w-16 h-16 border-t-2 border-primary rounded-full animate-spin" />
+        <div className="mt-8 text-xs text-primary font-bold tracking-widest text-center animate-pulse">CONNECTING...</div>
       </div>
     </div>
   );
@@ -108,56 +140,44 @@ function AppContent() {
 
   const renderView = () => {
     return (
-      <motion.div
-        key={currentView}
-        initial={{ opacity: 0, scale: 0.98, filter: 'blur(10px)' }}
-        animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      >
+      <div className="animate-in fade-in duration-500">
         {(() => {
           switch (currentView) {
             case 'dashboard': return <Dashboard shipments={shipments} inventory={inventory} pricing={pricing} />;
-            case 'shipments': return <ShipmentList shipments={shipments} />;
+            case 'sourcing': return <SourcingManager sourcing={sourcing} />;
+            case 'manufacturing': return <ManufacturingPulse jobs={manufacturing} />;
             case 'inventory': return <InventoryGrid inventory={inventory} />;
+            case 'shipments': return <ShipmentList shipments={shipments} />;
+            case 'distribution': return <DistributionFlow shipments={shipments} />;
+            case 'customer': return <CustomerCenter />;
             case 'pricing': return <PricingMatrix pricing={pricing} />;
-            case 'insights': return <AIInsights contextData={{ shipments, inventory, pricing }} />;
+            case 'insights': return <AIInsights contextData={{ shipments, inventory, pricing, sourcing, manufacturing }} />;
             default: return <Dashboard shipments={shipments} inventory={inventory} pricing={pricing} />;
           }
         })()}
-      </motion.div>
+      </div>
     );
   };
 
   return (
-    <div className="flex min-h-screen bg-bg-dark grid-pattern selection:bg-cyan-500/30 selection:text-cyan-200">
+    <div className="flex min-h-screen bg-bg-main">
       <Sidebar 
         currentView={currentView} 
-        setView={setCurrentView} 
-        onLogout={logout} 
-        userEmail={user.email || 'Admin'}
+        onViewChange={setCurrentView} 
+        collapsed={sidebarCollapsed}
+        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+        user={user}
+        onLogout={logout}
       />
       
-      <main className="flex-1 xl:ml-64 transition-all duration-300 min-w-0">
-        <div className="max-w-7xl mx-auto p-6 md:p-10 lg:p-12 mb-20 md:mb-0">
-          {renderView()}
+      <main className={cn(
+        "flex-1 transition-all duration-300 min-w-0 pb-12",
+        sidebarCollapsed ? "ml-16" : "ml-64"
+      )}>
+        <div className="p-6 md:p-8">
+           {renderView()}
         </div>
       </main>
-
-      {/* Footer / Status Bar */}
-      <footer className="fixed bottom-0 right-0 left-0 xl:left-64 h-8 px-6 flex items-center justify-between text-[9px] text-white/20 border-t border-white/5 bg-black/80 backdrop-blur-sm z-30 font-mono tracking-tighter">
-        <div className="flex gap-6">
-          <span className="flex items-center gap-2">
-            <div className="w-1 h-1 bg-cyan-500 rounded-full shadow-[0_0_5px_rgba(0,240,255,0.8)]" />
-            SECURE NODE: {user?.uid.slice(0, 8).toUpperCase() || 'OFFLINE'}
-          </span>
-          <span className="hidden md:inline">SYSTEM: v1.0.4-LNX</span>
-        </div>
-        <div className="flex gap-6 items-center">
-          <span className="flex items-center gap-1"><Activity size={10} className="text-emerald-500" /> LATENCY: 14MS</span>
-          <span className="hidden sm:inline">ENCRYPTION: AES-256-GCM</span>
-          <span className="text-white/40 uppercase font-bold tracking-widest">{new Date().toLocaleTimeString()}</span>
-        </div>
-      </footer>
     </div>
   );
 }

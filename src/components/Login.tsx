@@ -1,5 +1,5 @@
 import React from 'react';
-import { Lock, BrainCircuit, LogIn } from 'lucide-react';
+import { LogIn, Globe, ShieldCheck, Activity } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface LoginProps {
@@ -9,72 +9,68 @@ interface LoginProps {
 
 export const Login: React.FC<LoginProps> = ({ onLogin, loading }) => {
   return (
-    <div className="min-h-screen bg-bg-dark grid-pattern flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-600/5 rounded-full blur-[120px] -z-10" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-600/5 rounded-full blur-[120px] -z-10" />
+    <div className="min-h-screen bg-bg-main flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      {/* Soft background glow */}
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-600/5 rounded-full blur-[120px] -z-10 -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-indigo-600/5 rounded-full blur-[100px] -z-10 translate-y-1/2 -translate-x-1/2" />
 
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="glass w-full max-w-md p-10 relative overflow-hidden"
+        initial={{ opacity: 0, y: 20, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        className="w-full max-w-md"
       >
-        <div className="absolute top-0 left-0 w-full h-1 bg-cyan-500 shadow-[0_0_20px_rgba(6,182,212,0.8)]" />
-        
-        <div className="flex flex-col items-center gap-6 mb-10">
-          <div className="w-16 h-16 bg-cyan-500 rounded-sm rotate-45 flex items-center justify-center shadow-[0_0_30px_rgba(6,182,212,0.4)]">
-            <div className="w-8 h-8 bg-black rotate-45 flex items-center justify-center">
-              <BrainCircuit className="text-cyan-400 -rotate-45" size={20} />
-            </div>
+        <div className="flex flex-col items-center gap-8 mb-12">
+          <div className="w-20 h-20 bg-blue-600 rounded-[2rem] flex items-center justify-center shadow-2xl shadow-blue-500/30 rotate-12 transition-transform hover:rotate-0">
+             <Globe className="text-white" size={40} />
           </div>
           <div className="text-center">
-            <h1 className="text-3xl font-black text-white tracking-[0.2em] uppercase glow-text mb-2">NexChain <span className="text-cyan-400">AI</span></h1>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Autonomous Supply Protocol v1.0.4</p>
+             <h1 className="text-3xl font-black text-slate-900 tracking-tighter uppercase mb-2">SC Control Tower</h1>
+             <p className="text-sm font-bold text-slate-400 uppercase tracking-widest leading-none">Enterprise Supply Chain Platform</p>
           </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="p-4 bg-white/5 border border-white/10 rounded-sm">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-              <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Global Node Sync: Active</span>
+        <div className="glass bg-white p-10 shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-white">
+          <div className="space-y-8">
+            <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100 flex items-center gap-4">
+               <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                  <ShieldCheck size={20} />
+               </div>
+               <div>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Secure Authentication</p>
+                  <p className="text-sm font-bold text-slate-700">Google Cloud Single Sign-On</p>
+               </div>
             </div>
-            <p className="text-[10px] text-slate-500 leading-relaxed font-mono">
-              [SYSTEM] Establishing encrypted tunnel...<br />
-              [AUTH] Waiting for credentials...
-            </p>
+
+            <button
+               onClick={onLogin}
+               disabled={loading}
+               className="group relative w-full py-4 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl shadow-blue-500/20 hover:bg-blue-700 transition-all active:scale-[0.98] overflow-hidden"
+            >
+               <div className="absolute inset-0 bg-gradient-to-r from-blue-400/0 via-white/10 to-blue-400/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+               <span className="relative flex items-center justify-center gap-3">
+                 {loading ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                 ) : (
+                    <>
+                      <LogIn size={20} />
+                      Initialize Session
+                    </>
+                 )}
+               </span>
+            </button>
+
+            <div className="flex items-center justify-center gap-6 pt-4 text-[10px] font-black text-slate-300 uppercase tracking-widest border-t border-slate-50">
+               <span className="flex items-center gap-2"><Activity size={12} className="text-emerald-500" /> Status: Global-Active</span>
+               <span className="w-1.5 h-1.5 rounded-full bg-slate-200" />
+               <span>v1.0.4-Ent</span>
+            </div>
           </div>
-
-          <button
-            onClick={onLogin}
-            disabled={loading}
-            className="w-full py-4 bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed text-black font-black uppercase tracking-[0.4em] text-xs shadow-lg shadow-cyan-900/40 transition-all active:scale-[0.98] flex items-center justify-center gap-3"
-          >
-            {loading ? (
-               <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <>
-                <LogIn size={16} />
-                Initialize Session
-              </>
-            )}
-          </button>
-
-          <p className="text-center text-[9px] text-slate-600 uppercase tracking-widest font-bold">
-            Secured via Quantum-Resistance Protocol
-          </p>
         </div>
 
-        <div className="absolute bottom-0 right-0 p-2 opacity-5 pointer-events-none">
-           <BrainCircuit size={120} className="text-white" />
-        </div>
+        <p className="text-center mt-12 text-xs font-bold text-slate-400 uppercase tracking-widest">
+          Authorized Nodes Only. Monitoring Active.
+        </p>
       </motion.div>
-
-      <div className="mt-8 text-[10px] text-slate-700 font-mono tracking-tighter flex gap-6">
-        <span>LATENCY: 14MS</span>
-        <span>UPTIME: 142D 06H</span>
-        <span>SECURE NODE: 192.168.1.104</span>
-      </div>
     </div>
   );
 };

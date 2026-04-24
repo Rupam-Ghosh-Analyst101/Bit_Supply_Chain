@@ -34,4 +34,24 @@ export interface PricingRecord {
   updatedAt: string;
 }
 
-export type ViewType = 'dashboard' | 'shipments' | 'inventory' | 'pricing' | 'insights';
+export type ViewType = 'dashboard' | 'sourcing' | 'manufacturing' | 'inventory' | 'shipments' | 'distribution' | 'customer' | 'pricing' | 'insights';
+
+export interface SourcingRecord {
+  id: string;
+  vendorName: string;
+  material: string;
+  leadTime: number; // in days
+  reliabilityRating: number; // 0-100
+  riskLevel: 'low' | 'medium' | 'high';
+  lastAuditDate: string;
+}
+
+export interface ManufacturingJob {
+  id: string;
+  productName: string;
+  quantity: number;
+  status: 'planning' | 'production' | 'quality-check' | 'completed';
+  efficiency: number; // 0-100
+  startDate: string;
+  completionDate?: string;
+}
