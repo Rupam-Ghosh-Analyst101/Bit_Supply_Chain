@@ -1,81 +1,87 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Default deny
-    match /{document=**} {
-      allow read, write: if false;
-    }
-
+    
     function isSignedIn() {
       return request.auth != null;
     }
 
-    function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.uid == "u2wuF63HwxYLF6lIEpkI0PM1Tjt1" ||
+        request.auth.token.email == "rupamghosh2k20@gmail.com"
+      );
     }
 
-    function isValidId(id) {
-      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    match /shipments/{id} {
+      allow read: if isSignedIn() && (isAdmin() || resource.data.clientId == request.auth.uid);
+      allow write: if isSignedIn() && (isAdmin() || request.resource.data.clientId == request.auth.uid);
+    }
+    
+    match /inventory/{id} {
+      allow read: if isSignedIn() && (isAdmin() || resource.data.clientId == request.auth.uid);
+      allow write: if isSignedIn() && (isAdmin() || request.resource.data.clientId == request.auth.uid);
     }
 
-    // Helper for basic string validation
-    function isValidString(val, maxLen) {
-      return val is string && val.size() <= maxLen;
-    }
-
-    // Shipment Validation
-    function isValidShipment(data) {
-      return data.keys().hasAll(['id', 'origin', 'destination', 'status', 'priority']) &&
-             data.keys().size() <= 12 &&
-             isValidString(data.id, 128) &&
-             isValidString(data.origin, 256) &&
-             isValidString(data.destination, 256) &&
-             data.status in ['pending', 'in-transit', 'delivered', 'delayed', 'cancelled'] &&
-             data.priority in ['low', 'medium', 'high', 'critical'];
-    }
-
-    match /shipments/{shipmentId} {
+    match /pricing/{id} {
       allow read: if isSignedIn();
-      allow create: if isSignedIn() && isValidId(shipmentId) && isValidShipment(request.resource.data);
-      allow update: if isSignedIn() && isValidShipment(request.resource.data) &&
-                     (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'currentLat', 'currentLng', 'lastUpdated', 'eta']));
-      allow delete: if false; // Logistics records are permanent for audit
+      allow write: if isAdmin();
     }
 
-    // Inventory Validation
-    function isValidInventory(data) {
-      return data.keys().hasAll(['id', 'name', 'stockLevel', 'warehouse']) &&
-             data.keys().size() <= 10 &&
-             isValidString(data.id, 128) &&
-             isValidString(data.name, 256) &&
-             data.stockLevel is number &&
-             isValidString(data.warehouse, 256);
+    match /sourcing/{id} {
+      allow read: if isSignedIn() && (isAdmin() || resource.data.clientId == request.auth.uid);
+      allow write: if isSignedIn() && (isAdmin() || request.resource.data.clientId == request.auth.uid);
     }
 
-    match /inventory/{inventoryId} {
+    match /manufacturing/{id} {
+      allow read: if isSignedIn() && (isAdmin() || resource.data.clientId == request.auth.uid);
+      allow write: if isSignedIn() && (isAdmin() || request.resource.data.clientId == request.auth.uid);
+    }
+
+    match /market_stocks/{id} {
       allow read: if isSignedIn();
-      allow create: if isSignedIn() && isValidId(inventoryId) && isValidInventory(request.resource.data);
-      allow update: if isSignedIn() && isValidInventory(request.resource.data) &&
-                     (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stockLevel', 'unitPrice']));
-      allow delete: if false;
+      allow write: if isAdmin();
     }
 
-    // Pricing Validation
-    function isValidPricing(data) {
-      return data.keys().hasAll(['id', 'productId', 'basePrice', 'currentPrice']) &&
-             data.keys().size() <= 12 &&
-             isValidString(data.id, 128) &&
-             isValidString(data.productId, 128) &&
-             data.basePrice is number &&
-             data.currentPrice is number;
+    match /client_orders/{id} {
+      allow read: if isSignedIn() && (isAdmin() || resource.data.clientId == request.auth.uid);
+      allow create: if isSignedIn() && request.resource.data.clientId == request.auth.uid;
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
     }
 
-    match /pricing/{pricingId} {
+    match /stock_news/{id} {
       allow read: if isSignedIn();
-      allow create: if isSignedIn() && isValidId(pricingId) && isValidPricing(request.resource.data);
-      allow update: if isSignedIn() && isValidPricing(request.resource.data) &&
-                     (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['currentPrice', 'demandFactor', 'supplyFactor', 'competitorPrice', 'lastAdjustmentReason', 'updatedAt']));
-      allow delete: if false;
+      allow write: if isAdmin();
+    }
+
+    match /client_requests/{id} {
+      allow read: if isSignedIn() && (isAdmin() || resource.data.clientId == request.auth.uid);
+      allow write: if isSignedIn() && (isAdmin() || request.resource.data.clientId == request.auth.uid);
+    }
+
+    match /client_documents/{id} {
+      allow read: if isSignedIn() && (isAdmin() || resource.data.clientId == request.auth.uid);
+      allow write: if isSignedIn() && (isAdmin() || request.resource.data.clientId == request.auth.uid);
+    }
+
+    match /vault_documents/{id} {
+      allow read: if isSignedIn() && (isAdmin() || resource.data.clientId == request.auth.uid);
+      allow write: if isSignedIn() && (isAdmin() || request.resource.data.clientId == request.auth.uid);
+    }
+
+    match /client_profiles/{userId} {
+      allow read: if isSignedIn() && (isAdmin() || userId == request.auth.uid);
+      allow write: if isSignedIn() && (isAdmin() || userId == request.auth.uid);
+    }
+
+    match /admins/{id} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

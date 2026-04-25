@@ -1,6 +1,6 @@
 {
-  "name": "Bit~Supply",
-  "description": "An end-to-end autonomous supply chain orchestration platform featuring predictive sourcing, multi-modal logistics, AI-driven manufacturing, and real-time risk mitigation across the entire value chain.",
+  "name": "Bit~Supply Client Portal",
+  "description": "A premium customer transparency platform for tracking shipments, inventory levels, and logistics insights with real-time AI-powered predictions and global market intelligence.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }

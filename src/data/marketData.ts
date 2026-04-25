@@ -1,0 +1,142 @@
+import { MarketStock } from '../types';
+
+export const GLOBAL_MARKET_ASSETS: MarketStock[] = [
+  // GLOBAL TECH & CONSUMER
+  { id: 'nvda', name: 'NVIDIA Corporation', ticker: 'NVDA', price: 902.50, change: 2.1, volume: '42M', category: 'Global Tech', description: 'Leader in GPU computing, AI hardware, and accelerated computing solutions.' },
+  { id: 'aapl', name: 'Apple Inc.', ticker: 'AAPL', price: 172.10, change: -0.4, volume: '58M', category: 'Global Tech', description: 'Consumer electronics, software, and services multinational. Known for iPhone and iOS ecosystem.' },
+  { id: 'msft', name: 'Microsoft Corp.', ticker: 'MSFT', price: 420.55, change: 1.2, volume: '22M', category: 'Global Tech', description: 'Leader in cloud services (Azure), software (Windows/Office), and enterprise AI.' },
+  { id: 'tsla', name: 'Tesla, Inc.', ticker: 'TSLA', price: 168.30, change: -1.5, volume: '85M', category: 'Automotive', description: 'Electric vehicles, energy storage, and AI-driven robotics and driving solutions.' },
+  { id: 'amzn', name: 'Amazon.com Inc.', ticker: 'AMZN', price: 178.15, change: 0.8, volume: '34M', category: 'Cloud/Retail', description: 'E-commerce giant and leader in cloud infrastructure via AWS.' },
+  { id: 'googl', name: 'Alphabet Inc.', ticker: 'GOOGL', price: 154.20, change: 1.1, volume: '28M', category: 'Global Tech', description: 'Parent company of Google, leader in search, YouTube, and artificial intelligence.' },
+  { id: 'meta', name: 'Meta Platforms Inc.', ticker: 'META', price: 495.20, change: 1.8, volume: '15M', category: 'Global Tech', description: 'Social technology company building apps like Facebook, Instagram, and WhatsApp.' },
+  { id: 'nflx', name: 'Netflix Inc.', ticker: 'NFLX', price: 610.15, change: 0.3, volume: '3.2M', category: 'Entertainment', description: 'World\'s leading streaming entertainment service with millions of subscribers.' },
+  { id: 'adbe', name: 'Adobe Inc.', ticker: 'ADBE', price: 505.40, change: -0.6, volume: '2.8M', category: 'Global Tech', description: 'Software company specializing in creative and marketing solutions (Photoshop, Acrobat).' },
+  { id: 'crm', name: 'Salesforce Inc.', ticker: 'CRM', price: 302.10, change: 0.9, volume: '5.1M', category: 'Global Tech', description: 'Cloud-based software company providing customer relationship management (CRM) service.' },
+
+  // INDIA CORE (NIFTY 50 & BEYOND)
+  { id: 'rel', name: 'Reliance Industries', ticker: 'RELIANCE', price: 2924.30, change: 1.45, volume: '4.2M', category: 'India Core', description: 'Indias largest conglomerate with interests in energy, petrochemicals, retail, and Jio.' },
+  { id: 'tcs', name: 'Tata Consultancy Services', ticker: 'TCS', price: 3915.20, change: 0.65, volume: '1.8M', category: 'India Core', description: 'Global IT services, consulting and business solutions organization.' },
+  { id: 'hdfc', name: 'HDFC Bank Ltd.', ticker: 'HDFCBANK', price: 1532.40, change: 0.88, volume: '12M', category: 'Banking', description: 'Indias largest private sector bank by assets and network.' },
+  { id: 'infy', name: 'Infosys Ltd.', ticker: 'INFY', price: 1422.15, change: 0.72, volume: '6.5M', category: 'India Core', description: 'Next-generation digital services and consulting leader based in India.' },
+  { id: 'tatamot', name: 'Tata Motors Ltd.', ticker: 'TATAMOTORS', price: 984.10, change: 3.22, volume: '14M', category: 'Automotive', description: 'Leading global automobile manufacturing company including Jaguar Land Rover.' },
+  { id: 'sbin', name: 'State Bank of India', ticker: 'SBIN', price: 748.20, change: 1.12, volume: '25M', category: 'Banking', description: 'Indias largest public sector bank with a massive retail presence.' },
+  { id: 'bhartiartl', name: 'Bharti Airtel Ltd.', ticker: 'BHARTIARTL', price: 1210.45, change: 0.95, volume: '5.2M', category: 'Telecommunications', description: 'Leading global telecommunications company with operations in Africa and India.' },
+  { id: 'lt', name: 'Larsen & Toubro Ltd.', ticker: 'LT', price: 3740.10, change: -0.45, volume: '2.1M', category: 'India Core', description: 'Indian multinational engaged in EPC projects, manufacturing, and financial services.' },
+  { id: 'icici', name: 'ICICI Bank Ltd.', ticker: 'ICICIBANK', price: 1085.30, change: 1.25, volume: '8.5M', category: 'Banking', description: 'Leading private sector bank in India with widespread network.' },
+  { id: 'itc', name: 'ITC Ltd.', ticker: 'ITC', price: 425.60, change: 0.22, volume: '15M', category: 'India Core', description: 'Leading multi-business conglomerate with presence in FMCG, Hotels, Paper, and Agri Business.' },
+  { id: 'kotak', name: 'Kotak Mahindra Bank', ticker: 'KOTAKBANK', price: 1820.10, change: 0.45, volume: '3.1M', category: 'Banking', description: 'Prominent Indian banking and financial services group.' },
+  { id: 'axis', name: 'Axis Bank Ltd.', ticker: 'AXISBANK', price: 1055.40, change: 0.15, volume: '6.2M', category: 'Banking', description: 'Third largest private sector bank in India.' },
+  { id: 'hclt', name: 'HCL Technologies Ltd.', ticker: 'HCLTECH', price: 1622.15, change: -0.35, volume: '2.8M', category: 'India Core', description: 'Leading global technology company helping enterprises reimagine their businesses.' },
+  { id: 'asbp', name: 'Asian Paints Ltd.', ticker: 'ASIANPAINT', price: 2854.20, change: 0.62, volume: '1.2M', category: 'Chemicals', description: 'Largest paint company in India with operations in multiple countries.' },
+  { id: 'maruti', name: 'Maruti Suzuki India', ticker: 'MARUTI', price: 12540.00, change: 1.15, volume: '450K', category: 'Automotive', description: 'Indias largest passenger car company.' },
+  { id: 'sunp', name: 'Sun Pharmaceutical', ticker: 'SUNPHARMA', price: 1542.30, change: 0.45, volume: '1.8M', category: 'Healthcare', description: 'Fourth largest specialty generic pharmaceutical company in the world.' },
+  { id: 'titan', name: 'Titan Company Ltd.', ticker: 'TITAN', price: 3745.20, change: 1.85, volume: '1.1M', category: 'India Core', description: 'Consumer goods giant known for watches, jewelry (Tanishq), and eyewear.' },
+  { id: 'wipro', name: 'Wipro Ltd.', ticker: 'WIPRO', price: 485.20, change: 0.35, volume: '4.2M', category: 'India Core', description: 'Leading global IT, consulting and business process services company.' },
+  { id: 'bajfn', name: 'Bajaj Finance Ltd.', ticker: 'BAJFINANCE', price: 6540.10, change: -0.85, volume: '1.5M', category: 'Banking', description: 'One of the most diversified non-banking financial companies in India.' },
+  { id: 'untm', name: 'UltraTech Cement Ltd.', ticker: 'ULTRACEMCO', price: 9540.30, change: 0.72, volume: '350K', category: 'India Core', description: 'Largest manufacturer of grey cement, Ready Mix Concrete (RMC) in India.' },
+  { id: 'adanient', name: 'Adani Enterprises Ltd.', ticker: 'ADANIENT', price: 3210.45, change: -2.15, volume: '2.5M', category: 'India Core', description: 'Flagship company of the Adani Group with diverse business interests.' },
+  { id: 'adanigreen', name: 'Adani Green Energy Ltd.', ticker: 'ADANIGREEN', price: 1235.80, change: 1.78, volume: '3.8M', category: 'Energy', description: 'One of the largest renewable energy companies in India.' },
+  { id: 'adanitrans', name: 'Adani Energy Solutions', ticker: 'ADANIENSOL', price: 1045.20, change: 0.42, volume: '1.5M', category: 'Energy', description: 'Power transmission and retail electricity distribution company.' },
+  { id: 'adaniport', name: 'Adani Ports & SEZ', ticker: 'ADANIPORTS', price: 1342.15, change: 1.12, volume: '4.2M', category: 'Logistics', description: 'Indias largest commercial ports operator.' },
+  { id: 'ntpc', name: 'NTPC Ltd.', ticker: 'NTPC', price: 345.20, change: 0.55, volume: '12M', category: 'Energy', description: 'Indias largest power utility company.' },
+  { id: 'ongc', name: 'ONGC Ltd.', ticker: 'ONGC', price: 272.40, change: -0.32, volume: '18M', category: 'Raw Materials', description: 'Largest crude oil and natural gas company in India.' },
+  { id: 'powergrid', name: 'Power Grid Corp.', ticker: 'POWERGRID', price: 285.10, change: 0.45, volume: '10M', category: 'Energy', description: 'Indias largest electric power transmission utility.' },
+  { id: 'coal', name: 'Coal India Ltd.', ticker: 'COALINDIA', price: 442.15, change: 0.82, volume: '15M', category: 'Raw Materials', description: 'Largest coal producer in the world.' },
+
+  // GLOBAL FINANCIALS & BANKING
+  { id: 'jpm', name: 'JPMorgan Chase & Co.', ticker: 'JPM', price: 195.40, change: -0.1, volume: '8.4M', category: 'Banking', description: 'Leading global financial services firm and the largest bank in the US.' },
+  { id: 'bac', name: 'Bank of America Corp.', ticker: 'BAC', price: 37.20, change: 0.45, volume: '42M', category: 'Banking', description: 'One of the worlds leading financial institutions.' },
+  { id: 'wfc', name: 'Wells Fargo & Co.', ticker: 'WFC', price: 58.15, change: 0.82, volume: '15M', category: 'Banking', description: 'Multinational financial services company with a global presence.' },
+  { id: 'gs', name: 'Goldman Sachs Group', ticker: 'GS', price: 402.10, change: 1.15, volume: '2.5M', category: 'Banking', description: 'Leading global investment banking, securities and investment management firm.' },
+  { id: 'ms', name: 'Morgan Stanley', ticker: 'MS', price: 92.45, change: 0.32, volume: '6.2M', category: 'Banking', description: 'Leading global financial services firm providing investment banking services.' },
+  { id: 'visa', name: 'Visa Inc.', ticker: 'V', price: 282.15, change: 0.5, volume: '6.2M', category: 'Banking', description: 'World leader in digital payments facilitating transactions across 200+ countries.' },
+  { id: 'ma', name: 'Mastercard Inc.', ticker: 'MA', price: 475.20, change: 0.42, volume: '2.8M', category: 'Banking', description: 'Global technology company in the payments industry.' },
+  { id: 'axp', name: 'American Express Co.', ticker: 'AXP', price: 220.15, change: 1.25, volume: '3.1M', category: 'Banking', description: 'Globally integrated payments company.' },
+  
+  // SEMICONDUCTORS & HARDWARE
+  { id: 'asml_id', name: 'ASML Holding', ticker: 'ASML', price: 912.40, change: 1.15, volume: '1.5M', category: 'Semiconductors', description: 'Supplier to the semiconductor industry, providing chipmakers with critical lithography.' },
+  { id: 'tsm_id', name: 'Taiwan Semiconductor Manufacturing', ticker: 'TSM', price: 142.10, change: 2.8, volume: '18M', category: 'Semiconductors', description: 'Worlds largest dedicated independent semiconductor foundry.' },
+  { id: 'avgo', name: 'Broadcom Inc.', ticker: 'AVGO', price: 1320.50, change: 1.45, volume: '2.1M', category: 'Semiconductors', description: 'Global technology leader that designs and develops semiconductor solutions.' },
+  { id: 'amd', name: 'Advanced Micro Devices', ticker: 'AMD', price: 185.40, change: -1.12, volume: '65M', category: 'Semiconductors', description: 'Semiconductor company that develops computer processors and related technologies.' },
+  { id: 'intc', name: 'Intel Corporation', ticker: 'INTC', price: 38.20, change: -0.45, volume: '45M', category: 'Semiconductors', description: 'One of the worlds largest semiconductor chip manufacturers.' },
+  { id: 'mu', name: 'Micron Technology', ticker: 'MU', price: 125.15, change: 3.25, volume: '15M', category: 'Semiconductors', description: 'Global leader in memory and storage solutions.' },
+  { id: 'lrcx', name: 'Lam Research Corp.', ticker: 'LRCX', price: 955.20, change: 0.85, volume: '1.1M', category: 'Semiconductors', description: 'Supplier of wafer fabrication equipment and services to the semicon industry.' },
+  { id: 'amat', name: 'Applied Materials', ticker: 'AMAT', price: 210.45, change: 1.22, volume: '6.5M', category: 'Semiconductors', description: 'Leader in materials engineering solutions used to produce virtually every new chip.' },
+  
+  // AUTOMOTIVE GLOBAL
+  { id: 'tm', name: 'Toyota Motor Corp.', ticker: 'TM', price: 245.10, change: 0.55, volume: '3.2M', category: 'Automotive', description: 'One of the largest automobile manufacturers in the world.' },
+  { id: 'vwagy', name: 'Volkswagen AG', ticker: 'VWAGY', price: 15.45, change: -0.32, volume: '5.4M', category: 'Automotive', description: 'Major German automobile manufacturer.' },
+  { id: 'hmc', name: 'Honda Motor Co.', ticker: 'HMC', price: 34.20, change: 0.15, volume: '4.2M', category: 'Automotive', description: 'Global automotive and power equipment manufacturer.' },
+  { id: 'mbgay', name: 'Mercedes-Benz Group', ticker: 'MBG.DE', price: 74.20, change: 0.52, volume: '2.8M', category: 'Automotive', description: 'Leading global supplier of premium and luxurycars.' },
+  { id: 'f', name: 'Ford Motor Co.', ticker: 'F', price: 12.85, change: 0.12, volume: '55M', category: 'Automotive', description: 'American multinational automobile manufacturer.' },
+  { id: 'gm', name: 'General Motors', ticker: 'GM', price: 44.15, change: 1.45, volume: '18M', category: 'Automotive', description: 'Global company focused on advancing an all-electric future.' },
+  { id: 'rivn', name: 'Rivian Automotive', ticker: 'RIVN', price: 10.45, change: -2.15, volume: '25M', category: 'Automotive', description: 'Electric vehicle manufacturer and automotive technology company.' },
+  
+  // ENERGY & RAW MATERIALS
+  { id: 'xom', name: 'Exxon Mobil Corp.', ticker: 'XOM', price: 118.40, change: 0.85, volume: '15M', category: 'Energy', description: 'One of the worlds largest publicly traded energy providers and chemical manufacturers.' },
+  { id: 'cvx', name: 'Chevron Corporation', ticker: 'CVX', price: 158.15, change: 0.42, volume: '6.5M', category: 'Energy', description: 'Integrated energy company engaged in every aspect of the oil, gas, and geothermal energy.' },
+  { id: 'shel', name: 'Shell PLC', ticker: 'SHEL', price: 70.45, change: 0.32, volume: '5.2M', category: 'Energy', description: 'Global group of energy and petrochemical companies.' },
+  { id: 'bp', name: 'BP PLC', ticker: 'BP', price: 38.15, change: -0.15, volume: '12M', category: 'Energy', description: 'Major global energy company with operations in Europe, North and South America.' },
+  { id: 'oro', name: 'Rio Tinto Group', ticker: 'RIO', price: 68.40, change: -0.85, volume: '3.1M', category: 'Raw Materials', description: 'Leading global mining and metals group.' },
+  { id: 'bhp', name: 'BHP Group Ltd.', ticker: 'BHP', price: 58.15, change: -0.42, volume: '3.5M', category: 'Raw Materials', description: 'Worlds largest mining company by market capitalization.' },
+  { id: 'vale', name: 'Vale S.A.', ticker: 'VALE', price: 12.45, change: -1.15, volume: '22M', category: 'Raw Materials', description: 'Global leader in iron ore and nickel production.' },
+  
+  // HEALTHCARE & PHARMA
+  { id: 'lly', name: 'Eli Lilly and Company', ticker: 'LLY', price: 765.40, change: 1.25, volume: '2.5M', category: 'Healthcare', description: 'Leader in pharmaceutical products for diabetes, oncology, and more.' },
+  { id: 'nvo', name: 'Novo Nordisk', ticker: 'NVO', price: 128.15, change: 0.95, volume: '3.1M', category: 'Healthcare', description: 'Global healthcare company with a focus on defeating diabetes and chronic diseases.' },
+  { id: 'jnj', name: 'Johnson & Johnson', ticker: 'JNJ', price: 152.40, change: -0.25, volume: '6.2M', category: 'Healthcare', description: 'Developing medical devices, pharmaceuticals, and consumer packaged goods.' },
+  { id: 'pfe', name: 'Pfizer Inc.', ticker: 'PFE', price: 28.15, change: -0.15, volume: '25M', category: 'Healthcare', description: 'Leading research-based biopharmaceutical company.' },
+  { id: 'mrk', name: 'Merck & Co.', ticker: 'MRK', price: 129.40, change: 0.15, volume: '5.2M', category: 'Healthcare', description: 'Providing innovative health solutions through its prescription medicines.' },
+  { id: 'unh', name: 'UnitedHealth Group', ticker: 'UNH', price: 492.40, change: -1.1, volume: '2.8M', category: 'Healthcare', description: 'Diversified healthcare and well-being company.' },
+  
+  // CONSUMER & RETAIL GLOBAL
+  { id: 'wmt', name: 'Walmart Inc.', ticker: 'WMT', price: 60.15, change: 0.42, volume: '12M', category: 'Consumer Goods', description: 'Worlds largest retailer by revenue.' },
+  { id: 'hd', name: 'The Home Depot', ticker: 'HD', price: 345.20, change: 0.65, volume: '3.1M', category: 'Consumer Goods', description: 'Largest home improvement retailer in the US.' },
+  { id: 'pg', name: 'Procter & Gamble', ticker: 'PG', price: 162.15, change: -0.15, volume: '6.5M', category: 'Consumer Goods', description: 'Leader in consumer packaged goods (Tide, Gillette, Pampers).' },
+  { id: 'ko', name: 'Coca-Cola Company', ticker: 'KO', price: 60.45, change: 0.12, volume: '12M', category: 'Consumer Goods', description: 'Worlds largest beverage company.' },
+  { id: 'pep', name: 'PepsiCo Inc.', ticker: 'PEP', price: 172.15, change: 0.25, volume: '4.2M', category: 'Consumer Goods', description: 'Global food and beverage company.' },
+  { id: 'mcd', name: 'McDonaldds Corp.', ticker: 'MCD', price: 282.40, change: -0.45, volume: '3.2M', category: 'Consumer Goods', description: 'Leading global foodservice retailer.' },
+  { id: 'nke', name: 'Nike Inc.', ticker: 'NKE', price: 92.15, change: -0.85, volume: '6.2M', category: 'Consumer Goods', description: 'Leading designer, marketer and distributor of authentic athletic footwear.' },
+  { id: 'sbux', name: 'Starbucks Corp.', ticker: 'SBUX', price: 88.40, change: 0.15, volume: '8.4M', category: 'Consumer Goods', description: 'Premier roaster and retailer of specialty coffee in the world.' },
+  
+  // LOGISTICS & TRANSPORT
+  { id: 'ups', name: 'United Parcel Service', ticker: 'UPS', price: 145.20, change: -0.65, volume: '3.1M', category: 'Logistics', description: 'Global leader in logistics and shipping.' },
+  { id: 'fdx', name: 'FedEx Corporation', ticker: 'FDX', price: 265.15, change: 0.42, volume: '2.5M', category: 'Logistics', description: 'Global delivery services multinational.' },
+  { id: 'dhl', name: 'Deutsche Post DHL', ticker: 'DHL.DE', price: 40.20, change: 0.15, volume: '1.8M', category: 'Logistics', description: 'Leading German logistics group.' },
+  { id: 'maersk', name: 'A.P. Moller - Maersk', ticker: 'MAERSK-B.CO', price: 9540.00, change: -1.2, volume: '150K', category: 'Logistics', description: 'Integrated container logistics company.' },
+  { id: 'concor', name: 'Container Corp. India', ticker: 'CONCOR', price: 924.15, change: 1.15, volume: '1.2M', category: 'Logistics', description: 'Indian logistics company dealing in container transport.' },
+  { id: 'bluedart', name: 'Blue Dart Express Ltd.', ticker: 'BLUEDART', price: 6240.30, change: 0.42, volume: '85K', category: 'Logistics', description: 'Indias leading integrated express courier and package distribution company.' },
+  
+  // CRYPTOCURRENCIES (As Assets)
+  { id: 'btc', name: 'Bitcoin', ticker: 'BTCUSD', price: 65420.50, change: 1.25, volume: '25B', category: 'Cryptocurrency', description: 'First decentralized digital currency without a central bank or single administrator.' },
+  { id: 'eth', name: 'Ethereum', ticker: 'ETHUSD', price: 3420.15, change: 0.85, volume: '12B', category: 'Cryptocurrency', description: 'Community-run technology powering the cryptocurrency ether (ETH) and thousands of apps.' },
+  { id: 'sol', name: 'Solana', ticker: 'SOLUSD', price: 145.20, change: 4.52, volume: '3.5B', category: 'Cryptocurrency', description: 'Public blockchain platform with smart contract functionality.' },
+  { id: 'bnb', name: 'Binance Coin', ticker: 'BNBUSD', price: 585.40, change: 0.25, volume: '1.2B', category: 'Cryptocurrency', description: 'Cryptocurrency issued by the Binance exchange.' },
+  
+  // SCREENSHOT & SMALL CAP (Requested famous/gainers/losers)
+  { id: 'hscl', name: 'Himadri Speciality Chem', ticker: 'HSCL', price: 566.15, change: 5.59, volume: '2.5M', category: 'Chemicals', description: 'Leader in carbon-based speciality chemicals.' },
+  { id: 'cochin', name: 'Cochin Shipyard Limited', ticker: 'COCHINSHIP', price: 1664.70, change: 4.51, volume: '1.2M', category: 'Infrastructure', description: 'Largest shipbuilding and maintenance facility in India.' },
+  { id: 'abcots', name: 'AB Cotspin India Ltd.', ticker: 'ABCOTS', price: 310.85, change: -20.00, volume: '450K', category: 'Consumer Goods', description: 'Manufacturer of high-quality cotton yarns.' },
+  { id: 'valencia', name: 'Valencia Nutrition Ltd.', ticker: 'VALENCIA', price: 63.50, change: -18.85, volume: '120K', category: 'Consumer Goods', description: 'Health and wellness nutrition company.' },
+  { id: 'uvs', name: 'UVS Hospitality and Services', ticker: 'UVS', price: 75.00, change: -14.66, volume: '85K', category: 'Services', description: 'Hospitality and facility management services provider.' },
+  { id: 'ral', name: 'Resourceful Automobile', ticker: 'RAL', price: 35.30, change: -13.94, volume: '210K', category: 'Automotive', description: 'Automobile dealership and service network.' },
+  { id: 'royal', name: 'Royal Sense Ltd.', ticker: 'ROYAL', price: 149.00, change: -13.12, volume: '65K', category: 'Consumer Goods', description: 'Distributor of high-end consumer goods.' },
+  { id: 'skylmilar', name: 'Skyline Millars Limited', ticker: 'SKYLMILAR', price: 17.51, change: -11.74, volume: '300K', category: 'Infrastructure', description: 'Infrastructure development company.' },
+  
+  // ADDITIONAL FAMOUS INDIAN STOCKS
+  { id: 'zomato', name: 'Zomato Ltd.', ticker: 'ZOMATO', price: 184.20, change: 1.45, volume: '35M', category: 'Technology', description: 'Online food ordering and delivery company.' },
+  { id: 'nykaa', name: 'FSN E-Commerce (Nykaa)', ticker: 'NYKAA', price: 165.40, change: -0.32, volume: '4.2M', category: 'Consumer Goods', description: 'Indias leading beauty and wellness e-commerce platform.' },
+  { id: 'paytm', name: 'One97 Communications (Paytm)', ticker: 'PAYTM', price: 405.15, change: -1.25, volume: '5.2M', category: 'Financial Services', description: 'Indian multinational financial technology company.' },
+  { id: 'jiofin', name: 'Jio Financial Services', ticker: 'JIOFIN', price: 354.20, change: 2.15, volume: '18M', category: 'Financial Services', description: 'Financial arm of Reliance Industries.' },
+  { id: 'pnb', name: 'Punjab National Bank', ticker: 'PNB', price: 125.40, change: 0.85, volume: '42M', category: 'Banking', description: 'Indian public sector bank headquartered in Delhi.' },
+  { id: 'bob', name: 'Bank of Baroda', ticker: 'BANKBARODA', price: 265.15, change: 1.12, volume: '15M', category: 'Banking', description: 'Indian public sector banking and financial services company.' },
+  { id: 'canbk', name: 'Canara Bank', ticker: 'CANBK', price: 585.40, change: 0.42, volume: '8.4M', category: 'Banking', description: 'One of the oldest public sector banks in India.' },
+  { id: 'yesbank', name: 'Yes Bank Ltd.', ticker: 'YESBANK', price: 24.85, change: -0.42, volume: '85M', category: 'Banking', description: 'Indian private sector bank.' },
+  { id: 'dlf', name: 'DLF Ltd.', ticker: 'DLF', price: 924.15, change: 1.85, volume: '4.2M', category: 'Infrastructure', description: 'Largest commercial real estate developer in India.' },
+  { id: 'ireda', name: 'IREDA Ltd.', ticker: 'IREDA', price: 174.20, change: 4.12, volume: '25M', category: 'Energy', description: 'Indian Renewable Energy Development Agency.' },
+  { id: 'bhel', name: 'Bharat Heavy Electricals', ticker: 'BHEL', price: 265.40, change: 2.15, volume: '15M', category: 'Energy', description: 'Largest power generation equipment manufacturer in India.' },
+  { id: 'bel', name: 'Bharat Electronics Ltd.', ticker: 'BEL', price: 215.40, change: 1.25, volume: '12M', category: 'Technology', description: 'Indian state-owned aerospace and defence electronics company.' },
+  { id: 'hal', name: 'Hindustan Aeronautics', ticker: 'HAL', price: 3420.15, change: 0.85, volume: '850K', category: 'Infrastructure', description: 'Indian state-owned aerospace and defence company.' },
+  { id: 'rvnl', name: 'Rail Vikas Nigam Ltd.', ticker: 'RVNL', price: 265.20, change: 3.12, volume: '8.4M', category: 'Infrastructure', description: 'Indian public sector enterprise which works as the construction arm of the Ministry of Railways.' },
+  { id: 'irfc', name: 'Indian Railway Finance', ticker: 'IRFC', price: 145.40, change: 1.25, volume: '25M', category: 'Financial Services', description: 'Finance arm of Indian Railways.' },
+];

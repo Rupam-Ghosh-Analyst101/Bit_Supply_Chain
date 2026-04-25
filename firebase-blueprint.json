@@ -14,9 +14,10 @@
         "currentLng": { "type": "number" },
         "lastUpdated": { "type": "string", "format": "date-time" },
         "priority": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
-        "carrier": { "type": "string" }
+        "carrier": { "type": "string" },
+        "clientId": { "type": "string", "description": "The UID of the client who owns this shipment." }
       },
-      "required": ["id", "origin", "destination", "status", "priority"]
+      "required": ["id", "origin", "destination", "status", "priority", "clientId"]
     },
     "Inventory": {
       "title": "Inventory Item",
@@ -29,9 +30,10 @@
         "warehouse": { "type": "string" },
         "reorderPoint": { "type": "number" },
         "category": { "type": "string" },
-        "unitPrice": { "type": "number" }
+        "unitPrice": { "type": "number" },
+        "clientId": { "type": "string", "description": "The UID of the client who owns this inventory." }
       },
-      "required": ["id", "name", "stockLevel", "warehouse"]
+      "required": ["id", "name", "stockLevel", "warehouse", "clientId"]
     },
     "PricingModel": {
       "title": "Dynamic Pricing Model",
@@ -49,6 +51,64 @@
         "updatedAt": { "type": "string", "format": "date-time" }
       },
       "required": ["id", "productId", "basePrice", "currentPrice"]
+    },
+    "SourcingRecord": {
+      "title": "Sourcing Record",
+      "description": "Vendor and material sourcing information.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "vendorName": { "type": "string" },
+        "material": { "type": "string" },
+        "leadTime": { "type": "number" },
+        "reliabilityRating": { "type": "number" },
+        "riskLevel": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "lastAuditDate": { "type": "string", "format": "date" },
+        "clientId": { "type": "string", "description": "The UID of the client associated with this source." }
+      },
+      "required": ["id", "vendorName", "material", "leadTime", "reliabilityRating", "riskLevel", "clientId"]
+    },
+    "ManufacturingJob": {
+      "title": "Manufacturing Job",
+      "description": "Active production jobs in the facility.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "productName": { "type": "string" },
+        "quantity": { "type": "number" },
+        "status": { "type": "string", "enum": ["planning", "production", "quality-check", "completed"] },
+        "efficiency": { "type": "number" },
+        "startDate": { "type": "string", "format": "date" },
+        "clientId": { "type": "string", "description": "The UID of the client who owns this production job." }
+      },
+      "required": ["id", "productName", "quantity", "status", "efficiency", "startDate", "clientId"]
+    },
+    "Admin": {
+      "title": "Administrator",
+      "description": "System administrator with global access.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "operator"] }
+      },
+      "required": ["uid", "email"]
+    },
+    "VaultDocument": {
+      "title": "Vault Document",
+      "description": "Secure document stored in the vault.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "size": { "type": "number" },
+        "url": { "type": "string" },
+        "clientId": { "type": "string" },
+        "category": { "type": "string", "enum": ["shipping", "contract", "compliance", "other"] },
+        "timestamp": { "type": "number" }
+      },
+      "required": ["name", "type", "size", "url", "clientId", "category", "timestamp"]
     }
   },
   "firestore": {
@@ -63,6 +123,22 @@
     "/pricing/{pricingId}": {
       "schema": "PricingModel",
       "description": "Dynamic pricing records."
+    },
+    "/sourcing/{sourcingId}": {
+      "schema": "SourcingRecord",
+      "description": "Global vendor network."
+    },
+    "/manufacturing/{jobId}": {
+      "schema": "ManufacturingJob",
+      "description": "Factory production queue."
+    },
+    "/admins/{adminId}": {
+      "schema": "Admin",
+      "description": "Administrative users."
+    },
+    "/vault_documents/{docId}": {
+      "schema": "VaultDocument",
+      "description": "Secure vault documents."
     }
   }
 }

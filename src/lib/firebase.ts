@@ -23,6 +23,19 @@ testConnection();
 export const signInWithGoogle = () => signInWithPopup(auth, googleProvider);
 export const signOut = () => auth.signOut();
 
+export const checkIsAdmin = async (user: User): Promise<boolean> => {
+  // Check hardcoded admin UID first (corresponds to rupamghosh2k20@gmail.com)
+  if (user.uid === 'u2wuF63HwxYLF6lIEpkI0PM1Tjt1') return true;
+  
+  // Also check the admins collection
+  try {
+    const adminDoc = await getDocFromServer(doc(db, 'admins', user.uid));
+    return adminDoc.exists();
+  } catch {
+    return false;
+  }
+};
+
 export interface FirestoreErrorInfo {
   error: string;
   operationType: 'create' | 'update' | 'delete' | 'list' | 'get' | 'write';
