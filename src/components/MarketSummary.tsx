@@ -11,13 +11,43 @@ interface MarketSummaryProps {
 }
 
 export const MarketSummary: React.FC<MarketSummaryProps> = ({ stocks, onSelectStock }) => {
-  const topGainers = useMemo(() => {
-    return [...stocks].sort((a, b) => b.change - a.change).slice(0, 6);
+  const uniqueStocks = useMemo(() => {
+    const seen = new Set<string>();
+    return stocks.filter(s => {
+      const duplicate = seen.has(s.ticker);
+      seen.add(s.ticker);
+      return !duplicate;
+    });
   }, [stocks]);
 
+  const topGainers = useMemo(() => {
+    return [...uniqueStocks]
+      .filter(s => s.change > 0)
+      .sort((a, b) => b.change - a.change)
+      .slice(0, 6);
+  }, [uniqueStocks]);
+
   const topLosers = useMemo(() => {
-    return [...stocks].sort((a, b) => a.change - b.change).slice(0, 6);
-  }, [stocks]);
+    return [...uniqueStocks]
+      .filter(s => s.change < 0)
+      .sort((a, b) => a.change - b.change)
+      .slice(0, 6);
+  }, [uniqueStocks]);
+
+  const highVolume = useMemo(() => {
+    const parseVolume = (vol: string) => {
+      if (!vol || vol === 'N/A') return 0;
+      const num = parseFloat(vol);
+      const upperVol = vol.toUpperCase();
+      if (upperVol.includes('B')) return num * 1000000000;
+      if (upperVol.includes('M')) return num * 1000000;
+      if (upperVol.includes('K')) return num * 1000;
+      return num;
+    };
+    return [...uniqueStocks]
+      .sort((a, b) => parseVolume(b.volume) - parseVolume(a.volume))
+      .slice(0, 6);
+  }, [uniqueStocks]);
 
   const featuredIndex = { name: 'Nifty 50', ticker: 'NIFTY', value: 23897.95, change: -1.14 };
 
@@ -32,6 +62,16 @@ export const MarketSummary: React.FC<MarketSummaryProps> = ({ stocks, onSelectSt
     { name: 'Bitcoin', ticker: 'BTCUSD', value: '77,684', change: 0.28, icon: Bitcoin },
     { name: 'Crude Oil', ticker: 'OIL', value: '84.20', change: -1.2, icon: Zap },
   ];
+
+  if (stocks.length === 0) {
+    return (
+      <div className="py-20 text-center glass border-dashed border-white/10">
+        <Activity size={48} className="mx-auto text-slate-800 mb-6 animate-pulse" />
+        <h3 className="text-xl font-black text-white uppercase tracking-widest">Scanning Market Signals...</h3>
+        <p className="text-sm font-bold text-slate-600 uppercase tracking-widest mt-2 italic">Neural nodes are connecting to global liquidity pools.</p>
+      </div>
+    );
+  }
 
   // Mock mini chart data for indices
   const generateMiniChart = () => Array.from({ length: 20 }, () => ({ val: Math.floor(Math.random() * 50) + 20 }));
@@ -154,7 +194,7 @@ export const MarketSummary: React.FC<MarketSummaryProps> = ({ stocks, onSelectSt
           </div>
           
           <div className="space-y-2">
-            {topGainers.map((stock) => (
+            {topGainers.length > 0 ? topGainers.map((stock) => (
               <div 
                 key={stock.id} 
                 onClick={() => onSelectStock?.(stock)}
@@ -174,7 +214,11 @@ export const MarketSummary: React.FC<MarketSummaryProps> = ({ stocks, onSelectSt
                   <p className="text-[10px] font-black text-emerald-400 uppercase">+{stock.change}%</p>
                 </div>
               </div>
-            ))}
+            )) : (
+              <div className="p-10 text-center border border-dashed border-white/5 rounded-3xl">
+                <p className="text-[10px] font-black text-slate-700 uppercase tracking-widest italic">No upward vector detected</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -188,7 +232,7 @@ export const MarketSummary: React.FC<MarketSummaryProps> = ({ stocks, onSelectSt
           </div>
           
           <div className="space-y-2">
-            {topLosers.map((stock) => (
+            {topLosers.length > 0 ? topLosers.map((stock) => (
               <div 
                 key={stock.id} 
                 onClick={() => onSelectStock?.(stock)}
@@ -208,7 +252,11 @@ export const MarketSummary: React.FC<MarketSummaryProps> = ({ stocks, onSelectSt
                   <p className="text-[10px] font-black text-cyber-red uppercase">{stock.change}%</p>
                 </div>
               </div>
-            ))}
+            )) : (
+              <div className="p-10 text-center border border-dashed border-white/5 rounded-3xl">
+                <p className="text-[10px] font-black text-slate-700 uppercase tracking-widest italic">No downward vector detected</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -222,7 +270,7 @@ export const MarketSummary: React.FC<MarketSummaryProps> = ({ stocks, onSelectSt
           </div>
           
           <div className="space-y-2">
-            {stocks.slice(0, 6).map((stock) => (
+            {highVolume.length > 0 ? highVolume.map((stock) => (
               <div 
                 key={`vol-${stock.id}`} 
                 onClick={() => onSelectStock?.(stock)}
@@ -242,7 +290,11 @@ export const MarketSummary: React.FC<MarketSummaryProps> = ({ stocks, onSelectSt
                   <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Vol: {stock.volume}</p>
                 </div>
               </div>
-            ))}
+            )) : (
+              <div className="p-10 text-center border border-dashed border-white/5 rounded-3xl">
+                <p className="text-[10px] font-black text-slate-700 uppercase tracking-widest italic">No volume telemetry</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

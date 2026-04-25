@@ -94,7 +94,8 @@ export const MarketExplorer: React.FC<MarketExplorerProps> = ({ startingTicker }
     setSeeding(true);
     try {
       for (const stock of GLOBAL_MARKET_ASSETS) {
-        await addDoc(collection(db, 'market_stocks'), stock);
+        // Use ticker as ID to prevent duplicates
+        await setDoc(doc(db, 'market_stocks', stock.ticker), stock);
       }
       
       const snap = await getDocs(query(collection(db, 'market_stocks'), limit(250)));

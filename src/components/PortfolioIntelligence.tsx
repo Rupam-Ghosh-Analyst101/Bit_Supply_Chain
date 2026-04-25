@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { cn, formatDate } from '../lib/utils';
 import { MarketSummary } from './MarketSummary';
 import { TodaysSummary } from './TodaysSummary';
+import { GLOBAL_MARKET_ASSETS } from '../data/marketData';
 
 export const PortfolioIntelligence: React.FC = () => {
   const [stocks, setStocks] = useState<MarketStock[]>([]);
@@ -21,7 +22,11 @@ export const PortfolioIntelligence: React.FC = () => {
 
     // 1. Real-time Stocks
     const unsubStocks = onSnapshot(collection(db, 'market_stocks'), (snap) => {
-      setStocks(snap.docs.map(doc => ({ ...doc.data() as MarketStock, id: doc.id })));
+      if (snap.empty) {
+        setStocks(GLOBAL_MARKET_ASSETS);
+      } else {
+        setStocks(snap.docs.map(doc => ({ ...doc.data() as MarketStock, id: doc.id })));
+      }
     });
 
     // 2. Real-time Orders (to know portfolio relevance)
