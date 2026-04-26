@@ -118,7 +118,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         )}
       </div>
 
-      {!collapsed && isAdmin && (
+      {!collapsed && (
         <div className="px-6 mb-8 space-y-4">
           <div className="bg-white/5 border border-white/10 rounded-2xl p-1 flex items-center gap-1">
             <button 

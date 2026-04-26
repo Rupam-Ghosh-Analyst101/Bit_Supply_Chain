@@ -8,8 +8,8 @@ import { cn, formatDate, formatCurrency } from '../lib/utils';
 import { useAuth } from '../AuthContext';
 
 export const ClientPortal: React.FC = () => {
-  const { role, isAdmin } = useAuth();
-  const isOperator = role === 'operator' && isAdmin;
+  const { role } = useAuth();
+  const isOperator = role === 'operator';
   const [activeTab, setActiveTab] = useState<'requests' | 'documents'>('requests');
   const [requests, setRequests] = useState<ClientRequest[]>([]);
   const [vaultDocs, setVaultDocs] = useState<VaultDocument[]>([]);

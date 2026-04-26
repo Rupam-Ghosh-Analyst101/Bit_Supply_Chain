@@ -12,8 +12,8 @@ interface WorldMapProps {
 }
 
 export const WorldMap: React.FC<WorldMapProps> = ({ shipments }) => {
-  const { role, isAdmin } = useAuth();
-  const isOperator = role === 'operator' && isAdmin;
+  const { role } = useAuth();
+  const isOperator = role === 'operator';
   const locations = [
     { name: 'Shanghai, CN', coordinates: [121.4737, 31.2304], type: 'port' },
     { name: 'Los Angeles, US', coordinates: [-118.2437, 34.0522], type: 'port' },

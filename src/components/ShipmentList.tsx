@@ -14,8 +14,8 @@ interface ShipmentListProps {
 }
 
 export const ShipmentList: React.FC<ShipmentListProps> = ({ shipments, onAction }) => {
-  const { role, isAdmin } = useAuth();
-  const isOperator = role === 'operator' && isAdmin;
+  const { role } = useAuth();
+  const isOperator = role === 'operator';
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showDeploymentModal, setShowDeploymentModal] = useState(false);
   const [isDeploying, setIsDeploying] = useState(false);

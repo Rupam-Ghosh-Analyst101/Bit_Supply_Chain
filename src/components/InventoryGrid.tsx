@@ -128,8 +128,8 @@ export const InventoryGrid: React.FC<InventoryGridProps> = ({ inventory, onActio
               </button>
            </div>
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {recommendations.slice(0, 4).map((rec, i) => (
-                <div key={i} className="bg-blue-800/40 border border-blue-700/50 p-4 rounded-xl backdrop-blur-sm">
+              {recommendations.slice(0, 4).map((rec) => (
+                <div key={rec.id} className="bg-blue-800/40 border border-blue-700/50 p-4 rounded-xl backdrop-blur-sm">
                    <div className="flex justify-between items-start mb-3">
                       <span className="text-[10px] font-black uppercase text-blue-300/80">{rec.id}</span>
                       <span className="px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 text-[9px] font-black uppercase border border-red-500/30">Priority: {rec.priority}</span>
@@ -365,8 +365,8 @@ export const InventoryGrid: React.FC<InventoryGridProps> = ({ inventory, onActio
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
-                          {inventory.filter(i => i.stockLevel < i.reorderPoint * 1.5).slice(0, 4).map((item, idx) => (
-                            <tr key={idx}>
+                          {inventory.filter(i => i.stockLevel < i.reorderPoint * 1.5).slice(0, 4).map((item) => (
+                            <tr key={item.id}>
                               <td className="px-6 py-4 text-xs font-black text-slate-900">{item.name}</td>
                               <td className="px-6 py-4 text-xs font-bold text-blue-600">+{item.reorderPoint * 2}</td>
                               <td className="px-6 py-4 text-xs font-bold text-slate-500 font-mono">12d</td>

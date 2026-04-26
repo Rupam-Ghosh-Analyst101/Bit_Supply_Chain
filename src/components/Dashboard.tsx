@@ -52,8 +52,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ shipments, inventory, pric
     "MARKET PULSE: Reliance Industries infrastructure expansion detected..."
   ];
 
-  const { user, role, isAdmin } = useAuth();
-  const isOperator = role === 'operator' && isAdmin;
+  const { user, role } = useAuth();
+  const isOperator = role === 'operator';
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<MarketStock[]>([]);
   const [isSearching, setIsSearching] = useState(false);

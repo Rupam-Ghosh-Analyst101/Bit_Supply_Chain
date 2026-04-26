@@ -220,7 +220,7 @@ function AppContent() {
   useEffect(() => {
     if (!user) return;
 
-    const isOperatorView = role === 'operator' && isAdmin;
+    const isOperatorView = role === 'operator';
     const shipQuery = isOperatorView 
       ? collection(db, 'shipments') 
       : query(collection(db, 'shipments'), where('clientId', '==', user.uid));
