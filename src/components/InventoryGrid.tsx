@@ -128,8 +128,8 @@ export const InventoryGrid: React.FC<InventoryGridProps> = ({ inventory, onActio
               </button>
            </div>
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {recommendations.slice(0, 4).map((rec) => (
-                <div key={rec.id} className="bg-blue-800/40 border border-blue-700/50 p-4 rounded-xl backdrop-blur-sm">
+              {recommendations.slice(0, 4).map((rec, idx) => (
+                <div key={`rec-${rec.id || idx}`} className="bg-blue-800/40 border border-blue-700/50 p-4 rounded-xl backdrop-blur-sm">
                    <div className="flex justify-between items-start mb-3">
                       <span className="text-[10px] font-black uppercase text-blue-300/80">{rec.id}</span>
                       <span className="px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 text-[9px] font-black uppercase border border-red-500/30">Priority: {rec.priority}</span>
@@ -365,8 +365,8 @@ export const InventoryGrid: React.FC<InventoryGridProps> = ({ inventory, onActio
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
-                          {inventory.filter(i => i.stockLevel < i.reorderPoint * 1.5).slice(0, 4).map((item) => (
-                            <tr key={item.id}>
+                          {inventory.filter(i => i.stockLevel < i.reorderPoint * 1.5).slice(0, 4).map((item, idx) => (
+                            <tr key={`replenish-${item.id || idx}`}>
                               <td className="px-6 py-4 text-xs font-black text-slate-900">{item.name}</td>
                               <td className="px-6 py-4 text-xs font-bold text-blue-600">+{item.reorderPoint * 2}</td>
                               <td className="px-6 py-4 text-xs font-bold text-slate-500 font-mono">12d</td>
@@ -429,7 +429,7 @@ export const InventoryGrid: React.FC<InventoryGridProps> = ({ inventory, onActio
 
               <div className="p-8 space-y-8 max-h-[60vh] overflow-y-auto">
                 {getMockAuditTrail(viewingAuditItem).map((entry, idx) => (
-                  <div key={entry.id} className="relative pl-8 border-l-2 border-slate-100 last:border-0 pb-8 last:pb-0">
+                  <div key={`audit-${viewingAuditItem.id}-${entry.id || idx}`} className="relative pl-8 border-l-2 border-slate-100 last:border-0 pb-8 last:pb-0">
                     <div className="absolute left-[-9px] top-0 w-4 h-4 bg-white border-2 border-blue-600 rounded-full z-10" />
                     <div className="flex justify-between items-start mb-2">
                       <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em]">{entry.action}</span>

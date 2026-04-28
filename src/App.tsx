@@ -226,7 +226,7 @@ function AppContent() {
       : query(collection(db, 'shipments'), where('clientId', '==', user.uid));
     
     const unsubShip = onSnapshot(shipQuery, (snap) => {
-      setShipments(snap.docs.map(d => d.data() as Shipment));
+      setShipments(snap.docs.map(d => ({ ...d.data(), id: d.id } as Shipment)));
     }, (err) => handleFirestoreError(err, 'list', 'shipments'));
 
     const invQuery = isOperatorView
@@ -234,11 +234,11 @@ function AppContent() {
       : query(collection(db, 'inventory'), where('clientId', '==', user.uid));
 
     const unsubInv = onSnapshot(invQuery, (snap) => {
-      setInventory(snap.docs.map(d => d.data() as InventoryItem));
+      setInventory(snap.docs.map(d => ({ ...d.data(), id: d.id } as InventoryItem)));
     }, (err) => handleFirestoreError(err, 'list', 'inventory'));
 
     const unsubPrice = onSnapshot(collection(db, 'pricing'), (snap) => {
-      setPricing(snap.docs.map(d => d.data() as PricingRecord));
+      setPricing(snap.docs.map(d => ({ ...d.data(), id: d.id } as PricingRecord)));
     }, (err) => handleFirestoreError(err, 'list', 'pricing'));
 
     const sourceQuery = isOperatorView
@@ -246,7 +246,7 @@ function AppContent() {
       : query(collection(db, 'sourcing'), where('clientId', '==', user.uid));
 
     const unsubSource = onSnapshot(sourceQuery, (snap) => {
-      setSourcing(snap.docs.map(d => d.data() as SourcingRecord));
+      setSourcing(snap.docs.map(d => ({ ...d.data(), id: d.id } as SourcingRecord)));
     }, (err) => handleFirestoreError(err, 'list', 'sourcing'));
 
     const manufQuery = isOperatorView
@@ -254,7 +254,7 @@ function AppContent() {
       : query(collection(db, 'manufacturing'), where('clientId', '==', user.uid));
 
     const unsubManuf = onSnapshot(manufQuery, (snap) => {
-      setManufacturing(snap.docs.map(d => d.data() as ManufacturingJob));
+      setManufacturing(snap.docs.map(d => ({ ...d.data(), id: d.id } as ManufacturingJob)));
       setLoading(false);
     }, (err) => handleFirestoreError(err, 'list', 'manufacturing'));
 

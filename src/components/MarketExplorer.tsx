@@ -38,31 +38,64 @@ export const MarketExplorer: React.FC<MarketExplorerProps> = ({ startingTicker }
   const [orderProcessing, setOrderProcessing] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
 
-  // Mock Historical Data Generator
+  const [timeframe, setTimeframe] = useState<'1D' | '1W' | '1M' | '1Y'>('1M');
+
+  // Enhanced Historical Data Generator
   const chartData = useMemo(() => {
     if (!analyticsStock) return [];
     
     const data = [];
-    let currentPrice = analyticsStock.price * 0.9;
-    const points = 30; // 30 days
+    let currentPrice = analyticsStock.price * (0.85 + Math.random() * 0.1);
+    let points = 30;
+    let intervalHours = 24;
+
+    switch (timeframe) {
+      case '1D':
+        points = 24;
+        intervalHours = 1;
+        currentPrice = analyticsStock.price * 0.99;
+        break;
+      case '1W':
+        points = 7;
+        intervalHours = 24;
+        break;
+      case '1M':
+        points = 30;
+        intervalHours = 24;
+        break;
+      case '1Y':
+        points = 52;
+        intervalHours = 24 * 7;
+        break;
+    }
     
     for (let i = points; i >= 0; i--) {
       const date = new Date();
-      date.setDate(date.getDate() - i);
-      const volatility = currentPrice * 0.02;
-      currentPrice += (Math.random() - 0.45) * volatility;
+      date.setHours(date.getHours() - (i * intervalHours));
       
+      const volatility = currentPrice * (timeframe === '1D' ? 0.005 : 0.02);
+      currentPrice += (Math.random() - 0.48) * volatility;
+      
+      let dateLabel = "";
+      if (timeframe === '1D') {
+        dateLabel = date.getHours() + ":00";
+      } else if (timeframe === '1Y') {
+        dateLabel = date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+      } else {
+        dateLabel = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      }
+
       data.push({
-        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        price: Math.floor(currentPrice),
-        volume: Math.floor(Math.random() * 50000) + 10000
+        date: dateLabel,
+        price: parseFloat(currentPrice.toFixed(2)),
+        volume: Math.floor(Math.random() * (timeframe === '1D' ? 5000 : 100000)) + 1000
       });
     }
     
     // Ensure last point matches current price
     data[data.length - 1].price = analyticsStock.price;
     return data;
-  }, [analyticsStock]);
+  }, [analyticsStock, timeframe]);
 
   const mtdPerformance = useMemo(() => {
     if (!chartData.length) return 0;
@@ -486,10 +519,40 @@ export const MarketExplorer: React.FC<MarketExplorerProps> = ({ startingTicker }
                        </div>
                     </div>
 
+                    {/* Chart Header with Timeframes */}
+                    <div className="flex justify-between items-center mb-6">
+                       <h5 className="text-[10px] font-black text-white uppercase tracking-widest flex items-center gap-2">
+                          <BarChart3 size={14} className="text-cyber-blue" /> Price Action & Volume
+                       </h5>
+                       <div className="flex gap-1 bg-white/5 p-1 rounded-xl border border-white/10">
+                          {(['1D', '1W', '1M', '1Y'] as const).map((tf) => (
+                             <button
+                                key={tf}
+                                onClick={() => setTimeframe(tf)}
+                                className={cn(
+                                   "px-3 py-1.5 rounded-lg text-[9px] font-black tracking-widest transition-all",
+                                   timeframe === tf 
+                                      ? "bg-cyber-blue text-black" 
+                                      : "text-slate-500 hover:text-white hover:bg-white/5"
+                                )}
+                             >
+                                {tf}
+                             </button>
+                          ))}
+                       </div>
+                    </div>
+
                     {/* Chart Container */}
-                    <div className="h-[300px] lg:h-[400px] w-full mb-8 lg:mb-10 bg-white/[0.01] rounded-3xl border border-white/5 p-4 lg:p-6">
+                    <div className="h-[300px] lg:h-[400px] w-full mb-8 lg:mb-10 bg-white/[0.01] rounded-3xl border border-white/5 p-4 lg:p-6 relative">
+                       <div className="absolute top-6 left-6 z-10">
+                          <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">Volume Pulse</p>
+                          <div className="flex items-center gap-2">
+                             <div className="w-2 h-2 rounded-full bg-white/20 animate-pulse" />
+                             <span className="text-[10px] font-mono text-white/40">{(chartData[chartData.length-1]?.volume || 0).toLocaleString()} UNITS</span>
+                          </div>
+                       </div>
                        <ResponsiveContainer width="100%" height="100%">
-                          <ComposedChart data={chartData}>
+                          <ComposedChart data={chartData} margin={{ top: 20, right: 30, left: 10, bottom: 20 }}>
                              <defs>
                                 <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
                                    <stop offset="5%" stopColor="#00f2ff" stopOpacity={0.3}/>
@@ -504,6 +567,7 @@ export const MarketExplorer: React.FC<MarketExplorerProps> = ({ startingTicker }
                                 tickLine={false} 
                                 axisLine={false} 
                                 dy={10}
+                                interval={timeframe === '1D' ? 2 : 'preserveStartEnd'}
                              />
                              <YAxis 
                                 yAxisId="left"
@@ -512,7 +576,9 @@ export const MarketExplorer: React.FC<MarketExplorerProps> = ({ startingTicker }
                                 tickLine={false} 
                                 axisLine={false} 
                                 dx={-10}
-                                tickFormatter={(val) => `$${val}`}
+                                orientation="left"
+                                domain={['auto', 'auto']}
+                                tickFormatter={(val) => `$${val.toLocaleString()}`}
                              />
                              <YAxis 
                                 yAxisId="right"
@@ -525,15 +591,17 @@ export const MarketExplorer: React.FC<MarketExplorerProps> = ({ startingTicker }
                                 tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
                              />
                              <Tooltip 
+                                cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }}
                                 contentStyle={{ 
                                    backgroundColor: '#020617', 
                                    border: '1px solid #ffffff10', 
                                    borderRadius: '16px',
-                                   fontSize: '12px',
-                                   fontFamily: 'monospace'
+                                   fontSize: '11px',
+                                   fontFamily: 'monospace',
+                                   boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.4)'
                                 }}
-                                itemStyle={{ color: '#00f2ff', fontWeight: 'bold' }}
-                                labelStyle={{ color: '#64748b', marginBottom: '4px' }}
+                                itemStyle={{ padding: '2px 0' }}
+                                labelStyle={{ color: '#64748b', fontWeight: 'bold', marginBottom: '8px', borderBottom: '1px solid #ffffff05', paddingBottom: '4px' }}
                              />
                              <Area 
                                 yAxisId="left"
@@ -544,14 +612,18 @@ export const MarketExplorer: React.FC<MarketExplorerProps> = ({ startingTicker }
                                 fillOpacity={1} 
                                 fill="url(#colorPrice)" 
                                 animationDuration={2000}
+                                connectNulls
+                                activeDot={{ r: 6, stroke: '#00f2ff', strokeWidth: 2, fill: '#020617' }}
+                                name="Price"
                              />
                              <Bar 
                                 yAxisId="right"
                                 dataKey="volume" 
                                 fill="#ffffff" 
-                                fillOpacity={0.1}
+                                fillOpacity={0.05}
                                 radius={[4, 4, 0, 0]}
-                                barSize={20}
+                                barSize={timeframe === '1D' ? 12 : 20}
+                                name="Volume"
                              />
                           </ComposedChart>
                        </ResponsiveContainer>
